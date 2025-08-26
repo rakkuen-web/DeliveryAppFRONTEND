@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS Test - Delivery Connect</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .warning { background: #fff3cd; color: #856404; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>GPS Location Test</h1>
+    <p>This page helps test GPS functionality for the delivery app.</p>
+    
+    <button onclick="checkPermissions()">Check Permissions</button>
+    <button onclick="getCurrentLocation()">Get Current Location</button>
+    <button onclick="startWatching()">Start Watching</button>
+    <button onclick="stopWatching()">Stop Watching</button>
+    
+    <div id="status"></div>
+    <div id="location"></div>
+    
+    <h3>Instructions:</h3>
+    <ul>
+        <li>Make sure you're using HTTPS or localhost</li>
+        <li>Allow location permissions when prompted</li>
+        <li>Check browser console for detailed logs</li>
+    </ul>
+
+    <script>
+        let watchId = null;
+        
+        function log(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            const className = type === 'error' ? 'error' : type === 'warning' ? 'warning' : 'success';
+            statusDiv.innerHTML = `<div class="status ${className}">${message}</div>` + statusDiv.innerHTML;
+            console.log(message);
+        }
+        
+        async function checkPermissions() {
+            if (!navigator.geolocation) {
+                log('Geolocation is not supported by this browser', 'error');
+                return;
+            }
+            
+            try {
+                const permission = await navigator.permissions.query({name: 'geolocation'});
+                log(`Location permission: ${permission.state}`, permission.state === 'granted' ? 'success' : 'warning');
+            } catch (error) {
+                log(`Permission check failed: ${error.message}`, 'error');
+            }
+        }
+        
+        function getCurrentLocation() {
+            if (!navigator.geolocation) {
+                log('Geolocation is not supported', 'error');
+                return;
+            }
+            
+            log('Getting current location...', 'warning');
+            
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude, accuracy } = position.coords;
+                    log(`Location found: ${latitude.toFixed(6)}, ${longitude.toFixed(6)} (±${accuracy}m)`, 'success');
+                    document.getElementById('location').innerHTML = `
+                        <h3>Current Location:</h3>
+                        <p>Latitude: ${latitude}</p>
+                        <p>Longitude: ${longitude}</p>
+                        <p>Accuracy: ${accuracy} meters</p>
+                        <p>Timestamp: ${new Date(position.timestamp).toLocaleString()}</p>
+                    `;
+                },
+                (error) => {
+                    let errorMsg = '';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMsg = 'Location access denied by user';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMsg = 'Location information unavailable';
+                            break;
+                        case error.TIMEOUT:
+                            errorMsg = 'Location request timed out';
+                            break;
+                        default:
+                            errorMsg = 'Unknown location error';
+                            break;
+                    }
+                    log(`GPS Error: ${errorMsg}`, 'error');
+                },
+                {
+                    enableHighAccuracy: false,
+                    timeout: 10000,
+                    maximumAge: 60000
+                }
+            );
+        }
+        
+        function startWatching() {
+            if (watchId) {
+                log('Already watching location', 'warning');
+                return;
+            }
+            
+            if (!navigator.geolocation) {
+                log('Geolocation is not supported', 'error');
+                return;
+            }
+            
+            log('Starting location watch...', 'warning');
+            
+            watchId = navigator.geolocation.watchPosition(
+                (position) => {
+                    const { latitude, longitude, accuracy } = position.coords;
+                    log(`Location update: ${latitude.toFixed(6)}, ${longitude.toFixed(6)} (±${accuracy}m)`, 'success');
+                },
+                (error) => {
+                    log(`Watch error: ${error.message}`, 'error');
+                },
+                {
+                    enableHighAccuracy: false,
+                    timeout: 10000,
+                    maximumAge: 30000
+                }
+            );
+        }
+        
+        function stopWatching() {
+            if (watchId) {
+                navigator.geolocation.clearWatch(watchId);
+                watchId = null;
+                log('Stopped watching location', 'success');
+            } else {
+                log('Not currently watching location', 'warning');
+            }
+        }
+        
+        // Auto-check permissions on load
+        window.onload = checkPermissions;
+    </script>
+</body>
+</html>
