@@ -385,7 +385,7 @@ function CustomerDashboard({ user }) {
             <div style={{ fontSize: '14px', marginTop: '8px' }}>Your delivery history will appear here</div>
           </div>
         ) : (
-          requests.slice(0, 3).map(request => (
+          (requests || []).slice(0, 3).map(request => (
             <div key={request._id} className="order-item" onClick={() => navigate(`/track/${request._id}`)}>
               <div className="order-header">
                 <div>
