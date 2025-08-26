@@ -7,7 +7,7 @@ import TrackingTest from '../components/TrackingTest';
 import io from 'socket.io-client';
 
 
-import { API_URL } from '../config';
+import { API_BASE_URL } from '../config';
 
 function DriverDashboard({ user }) {
   const [pendingRequests, setPendingRequests] = useState([]);
@@ -49,7 +49,7 @@ function DriverDashboard({ user }) {
 
   const loadPendingRequests = async () => {
     try {
-      const response = await axios.get(`${API_URL}/requests/pending`);
+      const response = await axios.get(`${API_BASE_URL}/requests/pending`);
       setPendingRequests(response.data);
     } catch (error) {
       console.error('Error loading requests:', error);
@@ -60,7 +60,7 @@ function DriverDashboard({ user }) {
   const loadMyRequests = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${API_URL}/requests/my/${user._id}`, {
+      const response = await axios.get(`${API_BASE_URL}/requests/my/${user._id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMyRequests(response.data.filter(r => r.driverId?._id === user._id));
@@ -79,7 +79,7 @@ function DriverDashboard({ user }) {
   const toggleOnlineStatus = async () => {
     try {
       const newStatus = !isOnline;
-      await axios.patch(`${API_URL}/users/${user._id}/online`, {
+      await axios.patch(`${API_BASE_URL}/users/${user._id}/online`, {
         isOnline: newStatus
       });
       setIsOnline(newStatus);
@@ -97,12 +97,12 @@ function DriverDashboard({ user }) {
 
   const acceptRequest = async (requestId) => {
     try {
-      const response = await axios.post(`${API_URL}/requests/${requestId}/accept`, {
+      const response = await axios.post(`${API_BASE_URL}/requests/${requestId}/accept`, {
         driverId: user._id
       });
       
       // Mark driver as busy and assign to customer
-      await axios.patch(`${API_URL}/users/${user._id}`, {
+      await axios.patch(`${API_BASE_URL}/users/${user._id}`, {
         isBusy: true,
         assignedCustomer: response.data.customerId
       });
@@ -119,11 +119,11 @@ function DriverDashboard({ user }) {
 
   const updateRequestStatus = async (requestId, status) => {
     try {
-      await axios.patch(`${API_URL}/requests/${requestId}/status`, { status });
+      await axios.patch(`${API_BASE_URL}/requests/${requestId}/status`, { status });
       
       // If delivery is completed, mark driver as available again
       if (status === 'completed') {
-        await axios.patch(`${API_URL}/users/${user._id}`, {
+        await axios.patch(`${API_BASE_URL}/users/${user._id}`, {
           isBusy: false,
           assignedCustomer: null
         });
