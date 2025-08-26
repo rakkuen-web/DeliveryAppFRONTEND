@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import NotificationSystem from '../components/NotificationSystem';
 
-import { API_URL } from '../config';
+import { API_BASE_URL } from '../config';
 
 function Profile({ user, setUser }) {
   const [homeAddress, setHomeAddress] = useState(user?.homeAddress?.address || '');
@@ -18,7 +18,7 @@ function Profile({ user, setUser }) {
 
     setLoading(true);
     try {
-      const response = await axios.put(`${API_URL}/users/${user._id}`, {
+      const response = await axios.put(`${API_BASE_URL}/users/${user._id}`, {
         homeAddress: {
           address: homeAddress,
           latitude: 33.5731 + Math.random() * 0.01,
