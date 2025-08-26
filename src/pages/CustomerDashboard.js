@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import io from 'socket.io-client';
 import { getUserCity } from '../utils/cityDetector';
+import { API_URL, SOCKET_URL } from '../config';
+
+const socket = io(SOCKET_URL);
 
 
 
