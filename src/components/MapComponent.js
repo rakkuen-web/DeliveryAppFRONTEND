@@ -9,7 +9,7 @@ const MapComponent = ({ drivers = [], pickupLocation, deliveryLocation, driverLo
     // Load Google Maps script
     if (!window.google) {
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=geometry`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY || 'demo'}&libraries=geometry`;
       script.async = true;
       script.defer = true;
       script.onload = initMap;
@@ -26,18 +26,26 @@ const MapComponent = ({ drivers = [], pickupLocation, deliveryLocation, driverLo
   }, [drivers, pickupLocation, deliveryLocation, driverLocation, map]);
 
   const initMap = () => {
-    const mapInstance = new window.google.maps.Map(mapRef.current, {
-      center: { lat: 33.5731, lng: -7.5898 }, // Casablanca
-      zoom: 13,
-      styles: [
-        {
-          featureType: 'poi',
-          elementType: 'labels',
-          stylers: [{ visibility: 'off' }]
-        }
-      ]
-    });
-    setMap(mapInstance);
+    try {
+      if (!window.google?.maps) {
+        console.warn('Google Maps not loaded');
+        return;
+      }
+      const mapInstance = new window.google.maps.Map(mapRef.current, {
+        center: { lat: 33.5731, lng: -7.5898 }, // Casablanca
+        zoom: 13,
+        styles: [
+          {
+            featureType: 'poi',
+            elementType: 'labels',
+            stylers: [{ visibility: 'off' }]
+          }
+        ]
+      });
+      setMap(mapInstance);
+    } catch (error) {
+      console.error('Error initializing map:', error);
+    }
   };
 
   const updateMarkers = () => {
@@ -149,6 +157,24 @@ const MapComponent = ({ drivers = [], pickupLocation, deliveryLocation, driverLo
       map.fitBounds(bounds);
     }
   };
+
+  if (!window.google?.maps && !map) {
+    return (
+      <div style={{ 
+        width: '100%', 
+        height: '300px', 
+        borderRadius: '15px',
+        border: '2px solid #e0e0e0',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#f5f5f5',
+        color: '#666'
+      }}>
+        📍 Map Loading...
+      </div>
+    );
+  }
 
   return (
     <div 
