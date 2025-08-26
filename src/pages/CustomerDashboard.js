@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import io from 'socket.io-client';
 import { getUserCity } from '../utils/cityDetector';
-import { API_URL, SOCKET_URL } from '../config';
+import { API_BASE_URL, SOCKET_URL } from '../config';
 
 const socket = io(SOCKET_URL);
 
@@ -44,7 +44,7 @@ function CustomerDashboard({ user }) {
   const loadMyRequests = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${API_URL}/requests/my/${user._id}`, {
+      const response = await axios.get(`${API_BASE_URL}/requests/my/${user._id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setRequests(response.data);
@@ -66,7 +66,7 @@ function CustomerDashboard({ user }) {
         userLng = user.homeAddress.longitude;
       }
       
-      const response = await axios.get(`${API_URL}/drivers/available?lat=${userLat}&lng=${userLng}&radius=30`);
+      const response = await axios.get(`${API_BASE_URL}/drivers/available?lat=${userLat}&lng=${userLng}&radius=30`);
       setAvailableDrivers(response.data);
     } catch (error) {
       console.error('Error loading drivers:', error);

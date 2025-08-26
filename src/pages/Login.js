@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-import { API_URL } from '../config';
+import { API_BASE_URL } from '../config';
 
 function Login({ setUser }) {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -27,7 +27,7 @@ function Login({ setUser }) {
 
     try {
       const endpoint = isSignUp ? '/auth/signup' : '/auth/login';
-      const response = await axios.post(`${API_URL}${endpoint}`, formData);
+      const response = await axios.post(`${API_BASE_URL}${endpoint}`, formData);
       
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
