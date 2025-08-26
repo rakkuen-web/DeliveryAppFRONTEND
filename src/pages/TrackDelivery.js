@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import LiveTrackingMap from '../components/LiveTrackingMap';
 
-const API_URL = 'http://localhost:5000/api';
+import { API_URL } from '../config';
 
 function TrackDelivery({ user }) {
   const { requestId } = useParams();

@@ -7,7 +7,7 @@ import TrackingTest from '../components/TrackingTest';
 import io from 'socket.io-client';
 
 
-const API_URL = 'http://localhost:5000/api';
+import { API_URL } from '../config';
 
 function DriverDashboard({ user }) {
   const [pendingRequests, setPendingRequests] = useState([]);
@@ -24,7 +24,7 @@ function DriverDashboard({ user }) {
     loadMyRequests();
     
     // Initialize socket connection for driver
-    const socket = io('http://localhost:5000');
+    const socket = io(process.env.REACT_APP_API_URL || 'http://localhost:5000');
     window.driverSocket = socket;
     
     // Start location tracking when driver goes online

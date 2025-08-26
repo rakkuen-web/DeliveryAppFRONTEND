@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+import { API_URL } from '../config';
 
 export class LocationTracker {
   constructor(userId) {

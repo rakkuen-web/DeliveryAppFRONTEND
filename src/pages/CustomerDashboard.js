@@ -4,7 +4,7 @@ import axios from 'axios';
 import io from 'socket.io-client';
 import { getUserCity } from '../utils/cityDetector';
 
-const API_URL = 'http://localhost:5000/api';
+import { API_BASE_URL as API_URL, SOCKET_BASE_URL } from '../config';
 
 function CustomerDashboard({ user }) {
   const [requests, setRequests] = useState([]);
@@ -19,7 +19,7 @@ function CustomerDashboard({ user }) {
     loadMyRequests();
     loadAvailableDrivers();
     
-    const socket = io('http://localhost:5000');
+    const socket = io(SOCKET_BASE_URL);
     socket.on('driver-locations', (drivers) => {
       console.log('Received drivers:', drivers);
       setAvailableDrivers(drivers);

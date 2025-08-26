@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import NotificationSystem from '../components/NotificationSystem';
 
-const API_URL = 'http://localhost:5000/api';
+import { API_URL } from '../config';
 
 function Profile({ user, setUser }) {
   const [homeAddress, setHomeAddress] = useState(user?.homeAddress?.address || '');

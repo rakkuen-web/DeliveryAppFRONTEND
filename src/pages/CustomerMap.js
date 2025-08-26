@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-const API_URL = 'http://localhost:5000/api';
+import { API_URL } from '../config';
 
 function CustomerMap({ user }) {
   const [availableDrivers, setAvailableDrivers] = useState([]);
@@ -14,7 +14,7 @@ function CustomerMap({ user }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const newSocket = io('http://localhost:5000');
+    const newSocket = io(process.env.REACT_APP_API_URL || 'http://localhost:5000');
     setSocket(newSocket);
     
     // Listen for driver location updates

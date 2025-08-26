@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import LocationSelector from '../components/LocationSelector';
 
-const API_URL = 'http://localhost:5000/api';
+import { API_URL } from '../config';
 
 function CreateRequest({ user }) {
   const [formData, setFormData] = useState({

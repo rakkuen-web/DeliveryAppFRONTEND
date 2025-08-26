@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+import { API_BASE_URL as API_URL } from '../config';
 
 const LiveTrackingMap = ({ request, user }) => {
   const mapRef = useRef(null);

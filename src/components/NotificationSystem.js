@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+import { API_URL } from '../config';
 
 const NotificationSystem = ({ user }) => {
   const [notifications, setNotifications] = useState([]);
