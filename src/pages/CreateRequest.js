@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import LocationSelector from '../components/LocationSelector';
 
-import { API_URL } from '../config';
+import { API_BASE_URL } from '../config';
 
 function CreateRequest({ user }) {
   const [formData, setFormData] = useState({
@@ -87,7 +87,7 @@ function CreateRequest({ user }) {
         }
       };
 
-      await axios.post(`${API_URL}/requests`, requestData);
+      await axios.post(`${API_BASE_URL}/requests`, requestData);
       alert('Request created successfully!');
       navigate('/');
     } catch (error) {

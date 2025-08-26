@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-import { API_URL } from '../config';
+import { API_BASE_URL } from '../config';
 
 const NotificationSystem = ({ user }) => {
   const [notifications, setNotifications] = useState([]);
@@ -17,7 +17,7 @@ const NotificationSystem = ({ user }) => {
   const loadNotifications = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${API_URL}/notifications/${user._id}`, {
+      const response = await axios.get(`${API_BASE_URL}/notifications/${user._id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setNotifications(response.data);
@@ -30,7 +30,7 @@ const NotificationSystem = ({ user }) => {
   const markAsRead = async (notificationId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.patch(`${API_URL}/notifications/${notificationId}/read`, {}, {
+      await axios.patch(`${API_BASE_URL}/notifications/${notificationId}/read`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       loadNotifications();

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import LocationSelector from '../components/LocationSelector';
 
-import { API_URL } from '../config';
+import { API_BASE_URL } from '../config';
 
 function LocationSetup({ user, setUser }) {
   const [homeLocation, setHomeLocation] = useState(null);
@@ -43,7 +43,7 @@ function LocationSetup({ user, setUser }) {
 
     setLoading(true);
     try {
-      const response = await axios.put(`${API_URL}/users/${user._id}`, {
+      const response = await axios.put(`${API_BASE_URL}/users/${user._id}`, {
         homeAddress: homeLocation,
         location: homeLocation // For drivers, also set as current location
       });
