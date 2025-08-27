@@ -26,6 +26,12 @@ function CustomerDashboard({ user }) {
       setAvailableDrivers(drivers);
     });
     
+    socket.on('driver-status-changed', (data) => {
+      console.log('Driver status changed:', data);
+      // Refresh driver locations when status changes
+      socket.emit('get-driver-locations', { customerId: user._id });
+    });
+    
     // Request live driver locations via socket only
     socket.emit('get-driver-locations', { customerId: user._id });
     
