@@ -1,192 +1,158 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import io from 'socket.io-client';
+import { SOCKET_URL } from '../config';
+import '../styles/comfort.css';
 
-import { API_BASE_URL } from '../config';
+const socket = io(SOCKET_URL);
 
-const NotificationSystem = ({ user }) => {
+function NotificationSystem({ user }) {
   const [notifications, setNotifications] = useState([]);
-  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    loadNotifications();
-    // Poll for new notifications every 5 seconds
-    const interval = setInterval(loadNotifications, 5000);
-    return () => clearInterval(interval);
-  }, [user]);
-
-  const loadNotifications = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`${API_BASE_URL}/notifications/${user._id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setNotifications(response.data);
-      setUnreadCount(response.data.filter(n => !n.read).length);
-    } catch (error) {
-      console.error('Error loading notifications:', error);
+    // Join user's notification room
+    socket.emit('join-notifications', user._id);
+    
+    // Listen for new notifications
+    socket.on('new-notification', (notification) => {
+      setNotifications(prev => [notification, ...prev]);
+      
+      // Show browser notification if permission granted
+      if (Notification.permission === 'granted') {
+        new Notification(notification.title, {
+          body: notification.message,
+          icon: '/logo192.png',
+          badge: '/logo192.png'
+        });
+      }
+      
+      // Auto-remove after 5 seconds
+      setTimeout(() => {
+        setNotifications(prev => prev.filter(n => n.id !== notification.id));
+      }, 5000);
+    });
+    
+    // Request notification permission
+    if (Notification.permission === 'default') {
+      Notification.requestPermission();
     }
-  };
+    
+    return () => {
+      socket.off('new-notification');
+    };
+  }, [user._id]);
 
-  const markAsRead = async (notificationId) => {
-    try {
-      const token = localStorage.getItem('token');
-      await axios.patch(`${API_BASE_URL}/notifications/${notificationId}/read`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      loadNotifications();
-    } catch (error) {
-      console.error('Error marking notification as read:', error);
-    }
+  const removeNotification = (id) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
   };
 
   const getNotificationIcon = (type) => {
-    const icons = {
-      'order_accepted': '✅',
-      'driver_assigned': '🚗',
-      'status_shopping': '🛒',
-      'status_delivering': '🚚',
-      'order_completed': '🎉',
-      'order_cancelled': '❌'
-    };
-    return icons[type] || '📢';
+    switch (type) {
+      case 'order_accepted': return '✅';
+      case 'status_shopping': return '🛒';
+      case 'status_delivering': return '🚚';
+      case 'order_completed': return '🎉';
+      case 'order_cancelled': return '❌';
+      case 'new_message': return '💬';
+      default: return '📱';
+    }
   };
 
   const getNotificationColor = (type) => {
-    const colors = {
-      'order_accepted': '#4CAF50',
-      'driver_assigned': '#2196F3',
-      'status_shopping': '#FF9800',
-      'status_delivering': '#9C27B0',
-      'order_completed': '#4CAF50',
-      'order_cancelled': '#F44336'
-    };
-    return colors[type] || '#667eea';
+    switch (type) {
+      case 'order_accepted': return '#10b981';
+      case 'status_shopping': return '#f59e0b';
+      case 'status_delivering': return '#6366f1';
+      case 'order_completed': return '#10b981';
+      case 'order_cancelled': return '#ef4444';
+      case 'new_message': return '#8b5cf6';
+      default: return '#6b7280';
+    }
   };
 
   return (
     <div style={{
-      background: 'white',
-      borderRadius: '20px',
-      padding: '20px',
-      boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-      margin: '10px 0'
+      position: 'fixed',
+      top: '20px',
+      right: '20px',
+      zIndex: 3000,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '12px',
+      maxWidth: '350px'
     }}>
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: '20px'
-      }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center'
-        }}>
-          <div style={{ fontSize: '24px', marginRight: '10px' }}>🔔</div>
-          <div>
-            <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#333' }}>
-              Notifications
-            </div>
-            <div style={{ fontSize: '14px', color: '#666' }}>
-              Stay updated on your deliveries
-            </div>
-          </div>
-        </div>
-        
-        {unreadCount > 0 && (
-          <div style={{
-            background: '#FF6B35',
-            color: 'white',
-            borderRadius: '50%',
-            width: '24px',
-            height: '24px',
+      {notifications.map((notification) => (
+        <div
+          key={notification.id}
+          className="slide-up"
+          style={{
+            background: 'white',
+            borderRadius: '12px',
+            padding: '16px',
+            boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
+            border: `2px solid ${getNotificationColor(notification.type)}`,
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '12px',
-            fontWeight: 'bold'
-          }}>
-            {unreadCount}
-          </div>
-        )}
-      </div>
-
-      <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
-        {notifications.length === 0 ? (
+            alignItems: 'flex-start',
+            gap: '12px',
+            cursor: 'pointer'
+          }}
+          onClick={() => removeNotification(notification.id)}
+        >
           <div style={{
-            textAlign: 'center',
-            padding: '40px 20px',
-            color: '#666'
+            fontSize: '24px',
+            flexShrink: 0
           }}>
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>📭</div>
-            <div style={{ fontSize: '16px', marginBottom: '8px' }}>No notifications yet</div>
-            <div style={{ fontSize: '14px' }}>You'll see delivery updates here</div>
+            {getNotificationIcon(notification.type)}
           </div>
-        ) : (
-          notifications.map(notification => (
-            <div
-              key={notification._id}
-              onClick={() => !notification.read && markAsRead(notification._id)}
-              style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                padding: '16px',
-                marginBottom: '12px',
-                background: notification.read ? '#f8f9fa' : '#fff',
-                border: `2px solid ${notification.read ? '#e9ecef' : getNotificationColor(notification.type)}`,
-                borderRadius: '12px',
-                cursor: notification.read ? 'default' : 'pointer',
-                transition: 'all 0.3s ease'
-              }}
-            >
-              <div style={{
-                fontSize: '24px',
-                marginRight: '12px',
-                color: getNotificationColor(notification.type)
-              }}>
-                {getNotificationIcon(notification.type)}
-              </div>
-              
-              <div style={{ flex: 1 }}>
-                <div style={{
-                  fontSize: '16px',
-                  fontWeight: notification.read ? 'normal' : 'bold',
-                  color: '#333',
-                  marginBottom: '4px'
-                }}>
-                  {notification.title}
-                </div>
-                
-                <div style={{
-                  fontSize: '14px',
-                  color: '#666',
-                  marginBottom: '8px'
-                }}>
-                  {notification.message}
-                </div>
-                
-                <div style={{
-                  fontSize: '12px',
-                  color: '#999'
-                }}>
-                  {new Date(notification.createdAt).toLocaleString()}
-                </div>
-              </div>
-              
-              {!notification.read && (
-                <div style={{
-                  width: '8px',
-                  height: '8px',
-                  background: getNotificationColor(notification.type),
-                  borderRadius: '50%',
-                  marginTop: '8px'
-                }} />
-              )}
+          
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{
+              fontWeight: '600',
+              fontSize: '14px',
+              marginBottom: '4px',
+              color: getNotificationColor(notification.type)
+            }}>
+              {notification.title}
             </div>
-          ))
-        )}
-      </div>
+            <div style={{
+              fontSize: '13px',
+              color: 'var(--text)',
+              lineHeight: '1.4'
+            }}>
+              {notification.message}
+            </div>
+            <div style={{
+              fontSize: '11px',
+              color: 'var(--text-muted)',
+              marginTop: '8px'
+            }}>
+              {new Date(notification.timestamp).toLocaleTimeString([], { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+              })}
+            </div>
+          </div>
+          
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              removeNotification(notification.id);
+            }}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-muted)',
+              fontSize: '16px',
+              cursor: 'pointer',
+              padding: '4px',
+              flexShrink: 0
+            }}
+          >
+            ×
+          </button>
+        </div>
+      ))}
     </div>
   );
-};
+}
 
 export default NotificationSystem;
