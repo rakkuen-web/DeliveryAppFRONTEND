@@ -20,17 +20,24 @@ function CustomerDashboard({ user }) {
 
   useEffect(() => {
     loadMyRequests();
-    loadAvailableDrivers();
     
-
     socket.on('driver-locations', (drivers) => {
       console.log('Received drivers:', drivers);
       setAvailableDrivers(drivers);
     });
     
+    // Request live driver locations via socket only
     socket.emit('get-driver-locations', { customerId: user._id });
     
-    return () => socket.disconnect();
+    // Refresh every 10 seconds
+    const interval = setInterval(() => {
+      socket.emit('get-driver-locations', { customerId: user._id });
+    }, 10000);
+    
+    return () => {
+      socket.disconnect();
+      clearInterval(interval);
+    };
   }, []);
   
   useEffect(() => {
@@ -54,24 +61,7 @@ function CustomerDashboard({ user }) {
     setLoading(false);
   };
 
-  const loadAvailableDrivers = async () => {
-    try {
-      // Get user's city and location
-      const userCity = await getUserCity();
-      let userLat = userCity.center[0];
-      let userLng = userCity.center[1];
-      
-      if (user.homeAddress?.latitude && user.homeAddress?.longitude) {
-        userLat = user.homeAddress.latitude;
-        userLng = user.homeAddress.longitude;
-      }
-      
-      const response = await axios.get(`${API_BASE_URL}/drivers/available?lat=${userLat}&lng=${userLng}&radius=30`);
-      setAvailableDrivers(response.data);
-    } catch (error) {
-      console.error('Error loading drivers:', error);
-    }
-  };
+
 
   const initMap = async () => {
     if (!mapRef.current || !window.L || map) return;

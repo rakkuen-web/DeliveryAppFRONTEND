@@ -45,29 +45,18 @@ export class LocationTracker {
   }
 
   async updateLocation(latitude, longitude) {
-    console.log('📤 Updating location:', latitude, longitude);
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.patch(`${API_URL}/users/${this.userId}/location`, {
-        latitude,
-        longitude,
-        address: `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      console.log('✅ Location updated successfully');
-      
-      if (window.driverSocket) {
-        const locationData = {
-          driverId: this.userId,
-          location: { latitude, longitude },
-          timestamp: Date.now()
-        };
-        window.driverSocket.emit('driver-location', locationData);
-        window.driverSocket.emit('cache-driver-location', locationData);
-      }
-    } catch (error) {
-      console.error('❌ Location update failed:', error.response?.data || error.message);
+    console.log('📤 Live location update:', latitude, longitude);
+    
+    // Only emit to socket for live tracking, don't update database
+    if (window.driverSocket) {
+      const locationData = {
+        driverId: this.userId,
+        location: { latitude, longitude },
+        timestamp: Date.now()
+      };
+      window.driverSocket.emit('driver-location', locationData);
+      window.driverSocket.emit('cache-driver-location', locationData);
+      console.log('✅ Live location broadcasted');
     }
   }
 
