@@ -203,6 +203,13 @@ const LiveTrackingMap = ({ request, user }) => {
         }).addTo(map);
         
         setRouteLine(newRouteLine);
+        
+        // Fit map to show both user and driver
+        const bounds = window.L.latLngBounds([
+          [userLat, userLng],
+          [driverLocation.latitude, driverLocation.longitude]
+        ]);
+        map.fitBounds(bounds, { padding: [50, 50] });
       }
     }
     
