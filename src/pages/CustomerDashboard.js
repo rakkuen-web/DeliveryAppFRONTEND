@@ -23,7 +23,12 @@ function CustomerDashboard({ user }) {
     
     socket.on('driver-locations', (drivers) => {
       console.log('Received drivers:', drivers);
-      setAvailableDrivers(drivers);
+      // Filter out busy drivers on frontend as backup
+      const availableDrivers = drivers.filter(driver => 
+        !driver.isBusy && !driver.activeDeliveryId
+      );
+      console.log('Filtered available drivers:', availableDrivers);
+      setAvailableDrivers(availableDrivers);
     });
     
     socket.on('driver-status-changed', (data) => {
