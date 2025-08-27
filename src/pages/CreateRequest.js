@@ -81,8 +81,8 @@ function CreateRequest({ user }) {
           address: formData.store
         },
         deliveryLocation: {
-          latitude: formData.deliveryLocation.latitude || formData.deliveryLocation.coordinates?.lat || 33.5731,
-          longitude: formData.deliveryLocation.longitude || formData.deliveryLocation.coordinates?.lng || -7.5898,
+          latitude: formData.deliveryLocation.latitude || formData.deliveryLocation.coordinates?.lat,
+          longitude: formData.deliveryLocation.longitude || formData.deliveryLocation.coordinates?.lng,
           address: formData.deliveryLocation.address
         }
       };
