@@ -23,7 +23,7 @@ function MapTest() {
       attributionControl: false
     }).setView([33.5731, -7.5898], 13); // Casablanca
 
-    window.L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
+    window.L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
       attribution: '',
       maxZoom: 20
     }).addTo(leafletMap);
