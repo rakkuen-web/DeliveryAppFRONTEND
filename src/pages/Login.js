@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../styles/glovo.css';
+import '../styles/neon.css';
 import { API_BASE_URL } from '../config';
 
 function Login({ setUser }) {
@@ -67,46 +67,60 @@ function Login({ setUser }) {
   };
 
   return (
-    <div className="glovo-container">
-      {/* Glovo Header */}
-      <div className="glovo-header fade-in" style={{ textAlign: 'center' }}>
-        <div className="pulse" style={{
-          width: '80px',
-          height: '80px',
-          background: 'rgba(255,255,255,0.2)',
-          borderRadius: '20px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          margin: '0 auto 20px',
-          fontSize: '40px',
-          backdropFilter: 'blur(10px)'
-        }}>
-          🚀
-        </div>
-        <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px' }}>
-          DeliveryPro
-        </h1>
-        <p style={{ fontSize: '16px', opacity: 0.9 }}>
-          Fast & Reliable Delivery
-        </p>
-      </div>
+    <div style={{ minHeight: '100vh', position: 'relative' }}>
+      <div className="cyber-bg"></div>
+      
+      {/* Floating Particles */}
+      <div style={{ position: 'absolute', top: '10%', left: '10%', width: '20px', height: '20px', background: 'var(--neon-blue)', borderRadius: '50%', opacity: 0.6 }} className="float"></div>
+      <div style={{ position: 'absolute', top: '20%', right: '15%', width: '15px', height: '15px', background: 'var(--neon-purple)', borderRadius: '50%', opacity: 0.4 }} className="float"></div>
+      <div style={{ position: 'absolute', bottom: '30%', left: '20%', width: '25px', height: '25px', background: 'var(--neon-green)', borderRadius: '50%', opacity: 0.5 }} className="float"></div>
 
-      {/* Login Card */}
-      <div style={{ padding: '20px', marginTop: '-20px' }}>
-        <div className="glovo-card slide-up" style={{
-          position: 'relative',
-          zIndex: 10,
-          padding: '30px'
+      <div style={{ padding: '40px 20px', position: 'relative', zIndex: 10 }}>
+        {/* Cyber Header */}
+        <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+          <div className="float" style={{
+            width: '100px',
+            height: '100px',
+            background: 'linear-gradient(45deg, var(--neon-blue), var(--neon-purple))',
+            borderRadius: '25px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 30px',
+            fontSize: '50px',
+            boxShadow: '0 0 50px var(--neon-blue)'
+          }}>
+            🚀
+          </div>
+          <h1 className="cyber-text">NEXUS DELIVERY</h1>
+          <p style={{ 
+            fontSize: '16px', 
+            color: 'var(--neon-blue)', 
+            marginTop: '10px',
+            fontFamily: 'Orbitron, monospace',
+            letterSpacing: '2px'
+          }}>
+            QUANTUM SPEED • NEURAL PRECISION
+          </p>
+        </div>
+
+        {/* Login Interface */}
+        <div className="glass-card scan-lines" style={{ 
+          maxWidth: '400px', 
+          margin: '0 auto',
+          position: 'relative'
         }}>
-          <h2 style={{ 
+          <div style={{ 
             textAlign: 'center', 
             marginBottom: '30px',
             fontSize: '24px',
-            fontWeight: '600'
+            fontWeight: '700',
+            color: 'var(--neon-blue)',
+            textTransform: 'uppercase',
+            letterSpacing: '1px'
           }}>
-            {isSignUp ? 'Join DeliveryPro' : 'Welcome Back'}
-          </h2>
+            {isSignUp ? '◉ INITIALIZE USER' : '◉ ACCESS GRANTED'}
+          </div>
           
           <form onSubmit={handleSubmit}>
             {isSignUp && (
@@ -114,11 +128,24 @@ function Login({ setUser }) {
                 <input
                   type="text"
                   name="name"
-                  placeholder="Full Name"
+                  placeholder="NEURAL ID"
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="glovo-input"
+                  style={{
+                    width: '100%',
+                    padding: '15px',
+                    background: 'rgba(0, 245, 255, 0.1)',
+                    border: '2px solid var(--neon-blue)',
+                    borderRadius: '10px',
+                    color: 'white',
+                    fontSize: '14px',
+                    fontFamily: 'Orbitron, monospace',
+                    outline: 'none',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onFocus={(e) => e.target.style.boxShadow = '0 0 20px var(--neon-blue)'}
+                  onBlur={(e) => e.target.style.boxShadow = 'none'}
                 />
               </div>
             )}
@@ -127,11 +154,23 @@ function Login({ setUser }) {
               <input
                 type="email"
                 name="email"
-                placeholder="Email Address"
+                placeholder="QUANTUM EMAIL"
                 value={formData.email}
                 onChange={handleInputChange}
                 required
-                className="glovo-input"
+                style={{
+                  width: '100%',
+                  padding: '15px',
+                  background: 'rgba(0, 245, 255, 0.1)',
+                  border: '2px solid var(--neon-blue)',
+                  borderRadius: '10px',
+                  color: 'white',
+                  fontSize: '14px',
+                  fontFamily: 'Orbitron, monospace',
+                  outline: 'none'
+                }}
+                onFocus={(e) => e.target.style.boxShadow = '0 0 20px var(--neon-blue)'}
+                onBlur={(e) => e.target.style.boxShadow = 'none'}
               />
             </div>
 
@@ -140,11 +179,23 @@ function Login({ setUser }) {
                 <input
                   type="tel"
                   name="phone"
-                  placeholder="Phone Number"
+                  placeholder="NEURAL LINK"
                   value={formData.phone}
                   onChange={handleInputChange}
                   required
-                  className="glovo-input"
+                  style={{
+                    width: '100%',
+                    padding: '15px',
+                    background: 'rgba(0, 245, 255, 0.1)',
+                    border: '2px solid var(--neon-blue)',
+                    borderRadius: '10px',
+                    color: 'white',
+                    fontSize: '14px',
+                    fontFamily: 'Orbitron, monospace',
+                    outline: 'none'
+                  }}
+                  onFocus={(e) => e.target.style.boxShadow = '0 0 20px var(--neon-blue)'}
+                  onBlur={(e) => e.target.style.boxShadow = 'none'}
                 />
               </div>
             )}
@@ -153,11 +204,23 @@ function Login({ setUser }) {
               <input
                 type="password"
                 name="password"
-                placeholder="Password"
+                placeholder="SECURITY CODE"
                 value={formData.password}
                 onChange={handleInputChange}
                 required
-                className="glovo-input"
+                style={{
+                  width: '100%',
+                  padding: '15px',
+                  background: 'rgba(0, 245, 255, 0.1)',
+                  border: '2px solid var(--neon-blue)',
+                  borderRadius: '10px',
+                  color: 'white',
+                  fontSize: '14px',
+                  fontFamily: 'Orbitron, monospace',
+                  outline: 'none'
+                }}
+                onFocus={(e) => e.target.style.boxShadow = '0 0 20px var(--neon-blue)'}
+                onBlur={(e) => e.target.style.boxShadow = 'none'}
               />
             </div>
 
@@ -167,10 +230,20 @@ function Login({ setUser }) {
                   name="userType" 
                   value={formData.userType} 
                   onChange={handleInputChange}
-                  className="glovo-input"
+                  style={{
+                    width: '100%',
+                    padding: '15px',
+                    background: 'rgba(0, 245, 255, 0.1)',
+                    border: '2px solid var(--neon-blue)',
+                    borderRadius: '10px',
+                    color: 'white',
+                    fontSize: '14px',
+                    fontFamily: 'Orbitron, monospace',
+                    outline: 'none'
+                  }}
                 >
-                  <option value="customer">🛒 Customer</option>
-                  <option value="driver">🚗 Driver</option>
+                  <option value="customer" style={{ background: '#1a1a2e' }}>🛒 CONSUMER UNIT</option>
+                  <option value="driver" style={{ background: '#1a1a2e' }}>🚗 DELIVERY DRONE</option>
                 </select>
               </div>
             )}
@@ -178,14 +251,23 @@ function Login({ setUser }) {
             <button 
               type="submit" 
               disabled={loading}
-              className="glovo-button"
+              className="holo-btn"
               style={{
                 width: '100%',
                 marginBottom: '20px',
-                opacity: loading ? 0.7 : 1
+                opacity: loading ? 0.7 : 1,
+                textTransform: 'uppercase',
+                letterSpacing: '1px'
               }}
             >
-              {loading ? '⏳ Please wait...' : (isSignUp ? '🚀 Create Account' : '🔑 Sign In')}
+              {loading ? (
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div className="cyber-loading" style={{ marginRight: '10px' }}></div>
+                  PROCESSING...
+                </div>
+              ) : (
+                isSignUp ? '◉ INITIALIZE' : '◉ CONNECT'
+              )}
             </button>
           </form>
 
@@ -195,52 +277,49 @@ function Login({ setUser }) {
               style={{ 
                 background: 'none', 
                 border: 'none', 
-                color: 'var(--primary)', 
-                fontSize: '14px',
+                color: 'var(--neon-purple)', 
+                fontSize: '12px',
+                fontFamily: 'Orbitron, monospace',
                 fontWeight: '600',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                textTransform: 'uppercase',
+                letterSpacing: '1px'
               }}
             >
-              {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
+              {isSignUp ? '◉ EXISTING USER?' : '◉ NEW USER?'}
             </button>
           </div>
         </div>
 
-        {/* Quick Test Login */}
-        <div className="glovo-card fade-in" style={{ animationDelay: '0.3s' }}>
-          <h3 style={{ fontSize: '16px', marginBottom: '15px', textAlign: 'center' }}>
-            🚀 Quick Demo Access
+        {/* Quick Access */}
+        <div className="glass-card" style={{ 
+          maxWidth: '400px', 
+          margin: '20px auto 0',
+          textAlign: 'center'
+        }}>
+          <h3 style={{ 
+            fontSize: '14px', 
+            marginBottom: '15px', 
+            color: 'var(--neon-green)',
+            textTransform: 'uppercase',
+            letterSpacing: '1px'
+          }}>
+            ◉ DEMO ACCESS
           </h3>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <button 
               onClick={() => setFormData({...formData, email: 'customer@test.com', password: 'password123'})}
-              style={{
-                padding: '15px',
-                background: '#F8F9FA',
-                border: '2px solid var(--border)',
-                borderRadius: '12px',
-                fontSize: '14px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease'
-              }}
+              className="holo-btn"
+              style={{ fontSize: '12px', padding: '12px' }}
             >
-              🛒 Customer
+              CONSUMER
             </button>
             <button 
               onClick={() => setFormData({...formData, email: 'driver@test.com', password: 'password123'})}
-              style={{
-                padding: '15px',
-                background: '#F8F9FA',
-                border: '2px solid var(--border)',
-                borderRadius: '12px',
-                fontSize: '14px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease'
-              }}
+              className="holo-btn"
+              style={{ fontSize: '12px', padding: '12px' }}
             >
-              🚗 Driver
+              DRONE
             </button>
           </div>
         </div>

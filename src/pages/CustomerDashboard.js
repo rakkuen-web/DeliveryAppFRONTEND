@@ -4,7 +4,7 @@ import axios from 'axios';
 import io from 'socket.io-client';
 import { getUserCity } from '../utils/cityDetector';
 import { API_BASE_URL, SOCKET_URL } from '../config';
-import '../styles/glovo.css';
+import '../styles/neon.css';
 
 const socket = io(SOCKET_URL);
 
@@ -78,7 +78,8 @@ function CustomerDashboard({ user }) {
       attributionControl: false
     }).setView(userCity.center, 14);
     
-    window.L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
+    // Dark theme map
+    window.L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
       attribution: '',
       maxZoom: 20
     }).addTo(leafletMap);
@@ -97,10 +98,10 @@ function CustomerDashboard({ user }) {
     drivers.forEach((driver) => {
       if (driver.currentLocation) {
         const driverIcon = window.L.divIcon({
-          html: `<div class="driver-marker">🛵</div>`,
+          html: `<div class="holo-marker">🚀</div>`,
           className: 'custom-marker',
-          iconSize: [40, 40],
-          iconAnchor: [20, 20]
+          iconSize: [50, 50],
+          iconAnchor: [25, 25]
         });
         
         const marker = window.L.marker(
@@ -109,17 +110,34 @@ function CustomerDashboard({ user }) {
         ).addTo(map);
         
         marker.bindPopup(`
-          <div style="text-align: center; padding: 15px; min-width: 160px;">
+          <div style="
+            background: var(--card-bg); 
+            color: white; 
+            padding: 20px; 
+            border-radius: 15px;
+            border: 1px solid var(--neon-blue);
+            text-align: center;
+            font-family: 'Orbitron', monospace;
+            min-width: 180px;
+          ">
             <div style="
-              width: 50px; height: 50px; 
-              background: linear-gradient(135deg, #FF3B30 0%, #FF6B35 100%);
+              width: 60px; height: 60px; 
+              background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
               border-radius: 50%; display: flex; align-items: center; justify-content: center;
-              color: white; font-weight: 700; font-size: 20px; margin: 0 auto 10px;
-              box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3);
+              color: white; font-weight: 700; font-size: 24px; margin: 0 auto 15px;
+              box-shadow: 0 0 30px var(--neon-blue);
             ">${driver.name?.charAt(0) || 'D'}</div>
-            <div style="font-weight: 600; margin-bottom: 8px;">${driver.name}</div>
-            <div style="color: #FF3B30; margin-bottom: 10px;">⭐ ${driver.rating?.toFixed(1) || '5.0'}</div>
-            <div class="status-badge" style="background: #00D084;">Available</div>
+            <div style="font-weight: 600; margin-bottom: 10px; color: var(--neon-blue);">${driver.name}</div>
+            <div style="color: var(--neon-green); margin-bottom: 15px;">⭐ ${driver.rating?.toFixed(1) || '5.0'}</div>
+            <div style="
+              background: var(--neon-green); 
+              color: black; 
+              padding: 8px 15px; 
+              border-radius: 20px; 
+              font-size: 12px; 
+              font-weight: bold;
+              text-transform: uppercase;
+            ">ONLINE</div>
           </div>
         `);
         
@@ -130,59 +148,88 @@ function CustomerDashboard({ user }) {
 
   if (activeTab === 'drivers') {
     return (
-      <div className="glovo-container">
-        <div className="glovo-header fade-in">
+      <div style={{ minHeight: '100vh', position: 'relative' }}>
+        <div className="cyber-bg"></div>
+        
+        {/* Header */}
+        <div style={{
+          background: 'linear-gradient(135deg, var(--neon-blue), var(--neon-purple))',
+          padding: '50px 20px 30px',
+          position: 'relative'
+        }}>
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
             <button 
               onClick={() => setActiveTab('home')} 
+              className="holo-btn"
               style={{ 
-                background: 'rgba(255,255,255,0.2)', 
-                border: 'none', 
-                borderRadius: '12px',
                 padding: '12px',
-                color: 'white',
-                fontSize: '18px',
-                cursor: 'pointer',
-                marginRight: '15px'
+                marginRight: '15px',
+                fontSize: '18px'
               }}
             >←</button>
             <div>
-              <div style={{ fontSize: '24px', fontWeight: 'bold' }}>Available Drivers</div>
-              <div style={{ opacity: 0.8, fontSize: '14px' }}>{availableDrivers.length} drivers online</div>
+              <div className="cyber-text" style={{ fontSize: '24px' }}>ACTIVE DRONES</div>
+              <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', fontFamily: 'Orbitron' }}>
+                {availableDrivers.length} UNITS ONLINE
+              </div>
             </div>
           </div>
         </div>
         
-        <div style={{ padding: '20px', marginTop: '-20px' }}>
+        <div style={{ padding: '20px', marginTop: '-20px', position: 'relative', zIndex: 10 }}>
           {availableDrivers.length === 0 ? (
-            <div className="glovo-card fade-in" style={{ textAlign: 'center', padding: '60px 20px' }}>
-              <div style={{ fontSize: '64px', marginBottom: '20px' }}>🚗</div>
-              <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '10px' }}>No drivers available</div>
-              <div style={{ fontSize: '14px', color: 'var(--text-light)' }}>Check back in a few minutes</div>
+            <div className="glass-card" style={{ textAlign: 'center', padding: '60px 20px' }}>
+              <div style={{ fontSize: '64px', marginBottom: '20px' }}>🚀</div>
+              <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '10px', color: 'var(--neon-blue)' }}>
+                NO DRONES AVAILABLE
+              </div>
+              <div style={{ fontSize: '14px', color: 'var(--neon-purple)' }}>SCANNING FOR UNITS...</div>
             </div>
           ) : (
             availableDrivers.map((driver, index) => (
-              <div key={driver._id} className="glovo-card slide-up" style={{
+              <div key={driver._id} className="glass-card float" style={{
                 display: 'flex',
                 alignItems: 'center',
-                animationDelay: `${index * 0.1}s`
+                animationDelay: `${index * 0.2}s`
               }}>
-                <div className="pulse" style={{
-                  width: '60px', height: '60px',
-                  background: 'linear-gradient(135deg, #FF3B30 0%, #FF6B35 100%)',
+                <div className="neon-glow" style={{
+                  width: '70px', height: '70px',
+                  background: 'linear-gradient(45deg, var(--neon-blue), var(--neon-purple))',
                   borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: 'white', fontWeight: 'bold', fontSize: '20px', marginRight: '15px',
-                  boxShadow: '0 4px 15px rgba(255, 59, 48, 0.3)'
+                  color: 'white', fontWeight: 'bold', fontSize: '24px', marginRight: '20px'
                 }}>
                   {driver.name?.charAt(0) || 'D'}
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '5px' }}>{driver.name}</div>
-                  <div style={{ fontSize: '14px', color: 'var(--primary)', marginBottom: '5px' }}>⭐ {driver.rating?.toFixed(1) || '5.0'} • Professional</div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-light)' }}>🟢 Available now</div>
+                  <div style={{ 
+                    fontWeight: 'bold', 
+                    fontSize: '18px', 
+                    marginBottom: '8px', 
+                    color: 'var(--neon-blue)',
+                    fontFamily: 'Orbitron'
+                  }}>
+                    {driver.name}
+                  </div>
+                  <div style={{ 
+                    fontSize: '14px', 
+                    color: 'var(--neon-green)', 
+                    marginBottom: '5px',
+                    fontFamily: 'Orbitron'
+                  }}>
+                    ⭐ {driver.rating?.toFixed(1) || '5.0'} • NEURAL LINK ACTIVE
+                  </div>
+                  <div style={{ fontSize: '12px', color: 'var(--neon-purple)' }}>🟢 READY FOR DEPLOYMENT</div>
                 </div>
-                <div className="status-badge" style={{ background: 'var(--primary)' }}>
-                  2 min
+                <div style={{
+                  background: 'var(--neon-green)',
+                  color: 'black',
+                  padding: '10px 15px',
+                  borderRadius: '20px',
+                  fontSize: '12px',
+                  fontWeight: 'bold',
+                  fontFamily: 'Orbitron'
+                }}>
+                  2 MIN
                 </div>
               </div>
             ))
@@ -194,62 +241,103 @@ function CustomerDashboard({ user }) {
 
   if (activeTab === 'orders') {
     return (
-      <div className="glovo-container">
-        <div className="glovo-header fade-in">
+      <div style={{ minHeight: '100vh', position: 'relative' }}>
+        <div className="cyber-bg"></div>
+        
+        {/* Header */}
+        <div style={{
+          background: 'linear-gradient(135deg, var(--neon-purple), var(--neon-pink))',
+          padding: '50px 20px 30px',
+          position: 'relative'
+        }}>
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
             <button 
               onClick={() => setActiveTab('home')} 
+              className="holo-btn"
               style={{ 
-                background: 'rgba(255,255,255,0.2)', 
-                border: 'none', 
-                borderRadius: '12px',
                 padding: '12px',
-                color: 'white',
-                fontSize: '18px',
-                cursor: 'pointer',
-                marginRight: '15px'
+                marginRight: '15px',
+                fontSize: '18px'
               }}
             >←</button>
             <div>
-              <div style={{ fontSize: '24px', fontWeight: 'bold' }}>My Orders</div>
-              <div style={{ opacity: 0.8, fontSize: '14px' }}>{requests.length} total orders</div>
+              <div className="cyber-text" style={{ fontSize: '24px' }}>MISSION LOG</div>
+              <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', fontFamily: 'Orbitron' }}>
+                {requests.length} TOTAL MISSIONS
+              </div>
             </div>
           </div>
         </div>
         
-        <div style={{ padding: '20px', marginTop: '-20px' }}>
+        <div style={{ padding: '20px', marginTop: '-20px', position: 'relative', zIndex: 10 }}>
           {loading ? (
-            <div className="glovo-card" style={{ height: '80px', background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)', backgroundSize: '200px 100%', animation: 'shimmer 1.5s infinite' }}></div>
+            <div className="glass-card" style={{ 
+              height: '80px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center' 
+            }}>
+              <div className="cyber-loading"></div>
+              <span style={{ marginLeft: '15px', fontFamily: 'Orbitron' }}>LOADING MISSIONS...</span>
+            </div>
           ) : requests.length === 0 ? (
-            <div className="glovo-card fade-in" style={{ textAlign: 'center', padding: '60px 20px' }}>
+            <div className="glass-card" style={{ textAlign: 'center', padding: '60px 20px' }}>
               <div style={{ fontSize: '64px', marginBottom: '20px' }}>📦</div>
-              <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '10px' }}>No orders yet</div>
-              <div style={{ fontSize: '14px', color: 'var(--text-light)' }}>Your delivery history will appear here</div>
+              <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '10px', color: 'var(--neon-purple)' }}>
+                NO MISSIONS LOGGED
+              </div>
+              <div style={{ fontSize: '14px', color: 'var(--neon-blue)' }}>YOUR DELIVERY HISTORY WILL APPEAR HERE</div>
             </div>
           ) : (
             requests.map((request, index) => (
               <div 
                 key={request._id} 
-                className="glovo-card slide-up"
+                className="glass-card float"
                 onClick={() => navigate(`/track/${request._id}`)} 
                 style={{
                   cursor: 'pointer',
                   animationDelay: `${index * 0.1}s`,
-                  transition: 'transform 0.2s ease'
+                  transition: 'all 0.3s ease'
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
                   <div>
-                    <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '5px' }}>{request.item}</div>
-                    <div style={{ fontSize: '14px', color: 'var(--text-light)' }}>from {request.store}</div>
+                    <div style={{ 
+                      fontWeight: 'bold', 
+                      fontSize: '16px', 
+                      marginBottom: '5px', 
+                      color: 'var(--neon-blue)',
+                      fontFamily: 'Orbitron'
+                    }}>
+                      {request.item}
+                    </div>
+                    <div style={{ fontSize: '14px', color: 'var(--neon-purple)' }}>FROM: {request.store}</div>
                   </div>
-                  <div className={`status-badge status-${request.status}`}>
+                  <div style={{
+                    background: request.status === 'completed' ? 'var(--neon-green)' : 
+                               request.status === 'pending' ? 'var(--neon-blue)' : 
+                               request.status === 'delivering' ? 'var(--neon-purple)' : 'var(--neon-pink)',
+                    color: request.status === 'completed' ? 'black' : 'white',
+                    padding: '8px 12px',
+                    borderRadius: '12px',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    textTransform: 'uppercase',
+                    fontFamily: 'Orbitron'
+                  }}>
                     {request.status}
                   </div>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--primary)' }}>{request.price} MAD</div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-light)' }}>Tap to track →</div>
+                  <div style={{ 
+                    fontSize: '20px', 
+                    fontWeight: 'bold', 
+                    color: 'var(--neon-green)',
+                    fontFamily: 'Orbitron'
+                  }}>
+                    {request.price} MAD
+                  </div>
+                  <div style={{ fontSize: '12px', color: 'var(--neon-blue)' }}>◉ TAP TO TRACK</div>
                 </div>
               </div>
             ))
@@ -260,94 +348,152 @@ function CustomerDashboard({ user }) {
   }
 
   return (
-    <div className="glovo-container">
-      {/* Glovo Navbar */}
-      <div className="glovo-navbar fade-in">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{
-            background: 'rgba(255,255,255,0.2)',
-            borderRadius: '12px', padding: '12px 16px',
-            display: 'flex', alignItems: 'center', flex: 1, marginRight: '15px',
-            backdropFilter: 'blur(10px)'
-          }}>
-            <div style={{ fontSize: '16px', marginRight: '8px' }}>📍</div>
-            <div>
-              <div style={{ fontSize: '14px', fontWeight: '600', color: 'white' }}>
-                {user.homeAddress?.address || 'Set your location'}
-              </div>
-              <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.8)' }}>Delivery address</div>
-            </div>
-          </div>
-          <button 
-            onClick={() => navigate('/profile')}
-            style={{
-              width: '48px', height: '48px',
-              background: 'rgba(255,255,255,0.2)',
-              border: '2px solid rgba(255,255,255,0.3)',
-              borderRadius: '12px', color: 'white',
-              fontSize: '18px', fontWeight: 'bold', cursor: 'pointer',
-              backdropFilter: 'blur(10px)'
-            }}
-          >
-            {user.name?.charAt(0) || 'U'}
-          </button>
-        </div>
-      </div>
-
-      {/* Map */}
-      <div style={{ position: 'relative', height: '60vh', width: '100%', marginTop: '120px' }}>
-        <div ref={mapRef} style={{ width: '100%', height: '100%', borderRadius: '0' }} />
-        
-        <div className="pulse" style={{
-          position: 'absolute', top: '20px', right: '20px',
-          background: availableDrivers.length > 0 ? 'var(--primary)' : 'rgba(0,0,0,0.6)',
-          color: 'white', padding: '8px 12px', borderRadius: '20px',
-          fontSize: '12px', fontWeight: 'bold',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+    <div style={{ minHeight: '100vh', position: 'relative' }}>
+      <div className="cyber-bg"></div>
+      
+      {/* Floating HUD */}
+      <div style={{
+        position: 'fixed',
+        top: '20px',
+        left: '20px',
+        right: '20px',
+        zIndex: 1000,
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
+        <div className="glass-card" style={{
+          display: 'flex', alignItems: 'center', flex: 1, marginRight: '15px',
+          padding: '15px'
         }}>
-          {availableDrivers.length} drivers
+          <div style={{ fontSize: '16px', marginRight: '10px' }}>📍</div>
+          <div>
+            <div style={{ 
+              fontSize: '14px', 
+              fontWeight: '600', 
+              color: 'var(--neon-blue)',
+              fontFamily: 'Orbitron'
+            }}>
+              {user.homeAddress?.address || 'SET COORDINATES'}
+            </div>
+            <div style={{ fontSize: '12px', color: 'var(--neon-purple)' }}>DELIVERY ZONE</div>
+          </div>
+        </div>
+        <button 
+          onClick={() => navigate('/profile')}
+          className="neon-glow"
+          style={{
+            width: '50px', height: '50px',
+            background: 'linear-gradient(45deg, var(--neon-blue), var(--neon-purple))',
+            border: 'none',
+            borderRadius: '15px', color: 'white',
+            fontSize: '18px', fontWeight: 'bold', cursor: 'pointer',
+            fontFamily: 'Orbitron'
+          }}
+        >
+          {user.name?.charAt(0) || 'U'}
+        </button>
+      </div>
+
+      {/* Holographic Map */}
+      <div style={{ 
+        position: 'relative', 
+        height: '60vh', 
+        width: '100%', 
+        marginTop: '100px',
+        border: '2px solid var(--neon-blue)',
+        borderRadius: '20px',
+        margin: '100px 20px 0',
+        overflow: 'hidden',
+        boxShadow: '0 0 50px var(--neon-blue)'
+      }}>
+        <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
+        
+        <div className="neon-glow" style={{
+          position: 'absolute', top: '20px', right: '20px',
+          background: availableDrivers.length > 0 ? 'var(--neon-green)' : 'var(--neon-pink)',
+          color: availableDrivers.length > 0 ? 'black' : 'white',
+          padding: '10px 15px', borderRadius: '20px',
+          fontSize: '12px', fontWeight: 'bold',
+          fontFamily: 'Orbitron',
+          textTransform: 'uppercase'
+        }}>
+          {availableDrivers.length} DRONES ACTIVE
         </div>
       </div>
 
-      {/* Bottom Panel */}
-      <div className="slide-up" style={{
-        background: 'white', borderRadius: '25px 25px 0 0',
-        padding: '25px 20px 20px', boxShadow: '0 -10px 30px rgba(0,0,0,0.1)',
-        marginTop: '-25px', position: 'relative', zIndex: 1000
+      {/* Control Panel */}
+      <div className="glass-card scan-lines" style={{
+        margin: '20px',
+        padding: '30px',
+        position: 'relative'
       }}>
         <div style={{
-          width: '40px', height: '4px', background: '#E5E5E5',
-          borderRadius: '2px', margin: '0 auto 20px'
+          width: '50px', height: '4px', background: 'var(--neon-blue)',
+          borderRadius: '2px', margin: '0 auto 25px',
+          boxShadow: '0 0 10px var(--neon-blue)'
         }}></div>
         
         <button 
-          className="glovo-button pulse"
+          className="holo-btn neon-glow"
           onClick={() => navigate('/create-request')}
-          style={{ width: '100%', marginBottom: '20px' }}
+          style={{ 
+            width: '100%', 
+            marginBottom: '25px',
+            fontSize: '18px',
+            textTransform: 'uppercase',
+            letterSpacing: '2px'
+          }}
         >
-          🚀 Request Delivery
+          ◉ INITIATE DELIVERY
         </button>
         
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
           <button 
             onClick={() => setActiveTab('orders')}
+            className="glass-card"
             style={{
-              background: '#F8F8F8', border: 'none', borderRadius: '12px',
-              padding: '16px', cursor: 'pointer', textAlign: 'center'
+              border: '2px solid var(--neon-purple)',
+              cursor: 'pointer',
+              textAlign: 'center',
+              padding: '20px',
+              transition: 'all 0.3s ease'
             }}
+            onMouseEnter={(e) => e.target.style.boxShadow = '0 0 30px var(--neon-purple)'}
+            onMouseLeave={(e) => e.target.style.boxShadow = 'none'}
           >
-            <div style={{ fontSize: '20px', marginBottom: '4px' }}>📦</div>
-            <div style={{ fontSize: '14px', fontWeight: '600' }}>Orders</div>
+            <div style={{ fontSize: '24px', marginBottom: '8px' }}>📦</div>
+            <div style={{ 
+              fontSize: '14px', 
+              fontWeight: '600', 
+              color: 'var(--neon-purple)',
+              fontFamily: 'Orbitron'
+            }}>
+              MISSIONS
+            </div>
           </button>
           <button 
             onClick={() => setActiveTab('drivers')}
+            className="glass-card"
             style={{
-              background: '#F8F8F8', border: 'none', borderRadius: '12px',
-              padding: '16px', cursor: 'pointer', textAlign: 'center'
+              border: '2px solid var(--neon-green)',
+              cursor: 'pointer',
+              textAlign: 'center',
+              padding: '20px',
+              transition: 'all 0.3s ease'
             }}
+            onMouseEnter={(e) => e.target.style.boxShadow = '0 0 30px var(--neon-green)'}
+            onMouseLeave={(e) => e.target.style.boxShadow = 'none'}
           >
-            <div style={{ fontSize: '20px', marginBottom: '4px' }}>👥</div>
-            <div style={{ fontSize: '14px', fontWeight: '600' }}>Drivers</div>
+            <div style={{ fontSize: '24px', marginBottom: '8px' }}>🚀</div>
+            <div style={{ 
+              fontSize: '14px', 
+              fontWeight: '600', 
+              color: 'var(--neon-green)',
+              fontFamily: 'Orbitron'
+            }}>
+              DRONES
+            </div>
           </button>
         </div>
       </div>
