@@ -21,7 +21,7 @@ function TrackDelivery({ user }) {
   const loadRequest = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${API_URL}/requests/my/${user._id}`, {
+      const response = await axios.get(`${API_URL}/api/requests/my/${user._id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
