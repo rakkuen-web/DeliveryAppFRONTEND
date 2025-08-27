@@ -52,7 +52,8 @@ export class LocationTracker {
       const locationData = {
         driverId: this.userId,
         location: { latitude, longitude },
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        requestId: window.activeRequestId // Set by DriverLocationSharer
       };
       window.driverSocket.emit('driver-location', locationData);
       window.driverSocket.emit('cache-driver-location', locationData);

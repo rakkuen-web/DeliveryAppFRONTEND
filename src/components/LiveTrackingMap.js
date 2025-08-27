@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import io from 'socket.io-client';
 
-import { API_BASE_URL as API_URL } from '../config';
+import { API_BASE_URL as API_URL, SOCKET_URL } from '../config';
 
 const LiveTrackingMap = ({ request, user }) => {
   const mapRef = useRef(null);
@@ -62,23 +63,21 @@ const LiveTrackingMap = ({ request, user }) => {
   const startLocationTracking = () => {
     if (!request?.driverId) return;
     
-    const interval = setInterval(async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`${API_URL}/users/${request.driverId._id}/location`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        
-        if (response.data.location) {
-          setDriverLocation(response.data.location);
-          calculateETA(response.data.location);
-        }
-      } catch (error) {
-        console.error('Error fetching driver location:', error);
-      }
-    }, 3000);
+    const socket = io(SOCKET_URL);
     
-    return () => clearInterval(interval);
+    // Join room for this specific request
+    socket.emit('join-room', request._id);
+    
+    // Listen for driver location updates
+    socket.on('driver-location-update', (data) => {
+      console.log('Received driver location update:', data);
+      if (data.location) {
+        setDriverLocation(data.location);
+        setEta(data.eta);
+      }
+    });
+    
+    return () => socket.disconnect();
   };
 
   const stopLocationTracking = () => {};

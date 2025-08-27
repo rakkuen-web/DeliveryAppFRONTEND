@@ -7,15 +7,20 @@ const DriverLocationSharer = ({ user, activeDelivery }) => {
   const [currentLocation, setCurrentLocation] = useState(null);
 
   useEffect(() => {
-    if (user?.userType === 'driver' && activeDelivery) {
+    if (user?.userType === 'driver') {
       const tracker = new LocationTracker(user._id);
       setLocationTracker(tracker);
+      
+      // Set active request ID for tracking
+      window.activeRequestId = activeDelivery?._id;
+      
       startLocationSharing(tracker);
 
       return () => {
         if (tracker) {
           tracker.stopTracking();
         }
+        window.activeRequestId = null;
       };
     }
   }, [user, activeDelivery]);
