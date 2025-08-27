@@ -26,8 +26,36 @@ function Login({ setUser }) {
     setLoading(true);
 
     try {
+      let signupData = { ...formData };
+      
+      // Get GPS location for drivers during signup
+      if (isSignUp && formData.userType === 'driver') {
+        try {
+          const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+              enableHighAccuracy: false,
+              timeout: 10000,
+              maximumAge: 60000
+            });
+          });
+          
+          signupData.location = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            address: `${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`
+          };
+        } catch (gpsError) {
+          // Fallback to Casablanca coordinates if GPS fails
+          signupData.location = {
+            latitude: 33.5731,
+            longitude: -7.5898,
+            address: "Casablanca, Morocco"
+          };
+        }
+      }
+      
       const endpoint = isSignUp ? '/auth/signup' : '/auth/login';
-      const response = await axios.post(`${API_BASE_URL}${endpoint}`, formData);
+      const response = await axios.post(`${API_BASE_URL}${endpoint}`, signupData);
       
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
