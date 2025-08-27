@@ -10,7 +10,11 @@ function CreateRequest({ user }) {
     item: '',
     store: '',
     price: '',
-    deliveryLocation: user?.homeAddress || null,
+    deliveryLocation: user?.homeAddress ? {
+      latitude: user.homeAddress.latitude,
+      longitude: user.homeAddress.longitude,
+      address: user.homeAddress.address
+    } : null,
     notes: ''
   });
   const [useHomeAddress, setUseHomeAddress] = useState(true);
@@ -52,7 +56,11 @@ function CreateRequest({ user }) {
     setUseHomeAddress(!useHomeAddress);
     setFormData(prev => ({
       ...prev,
-      deliveryLocation: useHomeAddress ? null : user.homeAddress
+      deliveryLocation: useHomeAddress ? null : {
+        latitude: user.homeAddress.latitude,
+        longitude: user.homeAddress.longitude,
+        address: user.homeAddress.address
+      }
     }));
   };
 
