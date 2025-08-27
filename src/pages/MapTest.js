@@ -16,26 +16,24 @@ function MapTest() {
   }, []);
 
   const initMap = () => {
-    if (!mapRef.current || !window.L || map) return;
+    if (!mapRef.current || !window.google || map) return;
 
-    const leafletMap = window.L.map(mapRef.current, {
-      zoomControl: true,
-      attributionControl: false
-    }).setView([33.5731, -7.5898], 13); // Casablanca
+    const googleMap = new window.google.maps.Map(mapRef.current, {
+      center: { lat: 33.5731, lng: -7.5898 },
+      zoom: 13,
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullscreenControl: false
+    });
 
-    window.L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
-      attribution: '',
-      maxZoom: 20
-    }).addTo(leafletMap);
-
-    // Map click handler
-    leafletMap.on('click', (e) => {
-      const { lat, lng } = e.latlng;
-      setMarker(lat, lng);
+    googleMap.addListener('click', (e) => {
+      const lat = e.latLng.lat();
+      const lng = e.latLng.lng();
+      setMarker(lat, lng, googleMap);
       reverseGeocode(lat, lng);
     });
 
-    setMap(leafletMap);
+    setMap(googleMap);
   };
 
   const setMarker = (lat, lng) => {
