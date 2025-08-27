@@ -215,6 +215,39 @@ function CreateRequest({ user }) {
               <span>Deliver to my home address</span>
             </div>
             
+            <button
+              type="button"
+              onClick={() => {
+                navigator.geolocation.getCurrentPosition(
+                  (position) => {
+                    setFormData(prev => ({
+                      ...prev,
+                      deliveryLocation: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        address: `Current Location (${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)})`
+                      }
+                    }));
+                    setUseHomeAddress(false);
+                  },
+                  (error) => alert('Could not get your location. Please try again.')
+                );
+              }}
+              style={{
+                width: '100%',
+                padding: '12px',
+                border: '2px solid #4CAF50',
+                borderRadius: '8px',
+                background: 'white',
+                color: '#4CAF50',
+                cursor: 'pointer',
+                marginBottom: '10px',
+                fontWeight: 'bold'
+              }}
+            >
+              📍 Use My Current Location
+            </button>
+            
             {!useHomeAddress && (
               <button
                 type="button"

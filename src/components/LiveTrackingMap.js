@@ -8,6 +8,7 @@ const LiveTrackingMap = ({ request, user }) => {
   const mapRef = useRef(null);
   const [map, setMap] = useState(null);
   const [driverLocation, setDriverLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
   const [markers, setMarkers] = useState({});
   const [eta, setEta] = useState(null);
   const [routeLine, setRouteLine] = useState(null);
@@ -24,14 +25,15 @@ const LiveTrackingMap = ({ request, user }) => {
     if (map && request) {
       updateMapMarkers();
     }
-  }, [map, request, driverLocation]);
+  }, [map, request, driverLocation, userLocation]);
 
   const initMap = () => {
     if (!mapRef.current || !window.L || map) return;
     
-    // Use user's home address if available, otherwise delivery location
-    const userLat = user.homeAddress?.latitude || request.deliveryLocation.latitude;
-    const userLng = user.homeAddress?.longitude || request.deliveryLocation.longitude;
+    // Use delivery location from request
+    const userLat = request.deliveryLocation.latitude;
+    const userLng = request.deliveryLocation.longitude;
+    setUserLocation({ latitude: userLat, longitude: userLng });
     
     const leafletMap = window.L.map(mapRef.current, {
       zoomControl: false,
@@ -42,6 +44,8 @@ const LiveTrackingMap = ({ request, user }) => {
       attribution: '',
       maxZoom: 20
     }).addTo(leafletMap);
+    
+    setMap(leafletMap);
     
     if (!document.getElementById('tracking-map-style')) {
       const style = document.createElement('style');
@@ -56,8 +60,6 @@ const LiveTrackingMap = ({ request, user }) => {
       `;
       document.head.appendChild(style);
     }
-    
-    setMap(leafletMap);
   };
 
   const startLocationTracking = () => {
@@ -126,23 +128,18 @@ const LiveTrackingMap = ({ request, user }) => {
   };
 
   const updateMapMarkers = () => {
-    if (!map || !request) return;
+    if (!map || !userLocation) return;
     
     Object.values(markers).forEach(marker => map.removeLayer(marker));
     
     const newMarkers = {};
     
-    // User location marker (user's actual location)
-    const userLat = user.homeAddress?.latitude || request.deliveryLocation.latitude;
-    const userLng = user.homeAddress?.longitude || request.deliveryLocation.longitude;
-    
+    // User location marker (real GPS location)
     newMarkers.user = window.L.marker(
-      [userLat, userLng],
+      [userLocation.latitude, userLocation.longitude],
       {
         icon: window.L.divIcon({
-          html: `<div style="
-            font-size: 24px;
-          ">📍</div>`,
+          html: `<div style="font-size: 24px;">📍</div>`,
           className: 'user-marker',
           iconSize: [24, 24],
           iconAnchor: [12, 24]
@@ -156,15 +153,29 @@ const LiveTrackingMap = ({ request, user }) => {
         [driverLocation.latitude, driverLocation.longitude],
         {
           icon: window.L.divIcon({
-            html: `<div style="
-              font-size: 24px;
-            ">🛵</div>`,
+            html: `<div style="font-size: 24px;">🛵</div>`,
             className: 'driver-marker',
             iconSize: [24, 24],
             iconAnchor: [12, 24]
           })
         }
       ).addTo(map);
+      
+      // Draw line between user and driver
+      if (routeLine) {
+        map.removeLayer(routeLine);
+      }
+      
+      const newRouteLine = window.L.polyline([
+        [userLocation.latitude, userLocation.longitude],
+        [driverLocation.latitude, driverLocation.longitude]
+      ], {
+        color: '#667eea',
+        weight: 3,
+        opacity: 0.8
+      }).addTo(map);
+      
+      setRouteLine(newRouteLine);
     }
     
     setMarkers(newMarkers);
