@@ -124,21 +124,35 @@ function CustomerDashboard({ user }) {
         const driverIcon = window.L.divIcon({
           html: `
             <div style="
-              width: ${iconSize}px;
-              height: ${iconSize}px;
-              background: ${iconColor};
+              width: 40px;
+              height: 40px;
+              background: linear-gradient(135deg, #FF3B30 0%, #FF6B35 100%);
               border-radius: 50%;
-              border: 3px solid white;
-              box-shadow: 0 4px 12px rgba(255, 59, 48, 0.4);
+              border: 4px solid white;
+              box-shadow: 0 6px 20px rgba(255, 59, 48, 0.5);
               display: flex;
               align-items: center;
               justify-content: center;
-              font-size: 16px;
-            ">🛵</div>
+              font-size: 18px;
+              animation: pulse 2s infinite;
+              position: relative;
+            ">
+              🛵
+              <div style="
+                position: absolute;
+                top: -8px;
+                right: -8px;
+                width: 16px;
+                height: 16px;
+                background: #00D084;
+                border-radius: 50%;
+                border: 2px solid white;
+              "></div>
+            </div>
           `,
           className: 'delivery-driver-marker',
-          iconSize: [iconSize, iconSize],
-          iconAnchor: [iconSize/2, iconSize/2]
+          iconSize: [40, 40],
+          iconAnchor: [20, 20]
         });
         
         const marker = window.L.marker(
@@ -365,56 +379,63 @@ function CustomerDashboard({ user }) {
 
   return (
     <div style={{ background: '#fff', minHeight: '100vh', position: 'relative' }}>
-      {/* Glovo-style Header */}
+      {/* Top Navigation Bar */}
       <div className="fade-in" style={{
-        position: 'absolute',
-        top: '20px',
-        left: '20px',
-        right: '20px',
+        position: 'fixed',
+        top: '0',
+        left: '0',
+        right: '0',
+        background: 'linear-gradient(135deg, #FF3B30 0%, #FF6B35 100%)',
+        padding: '15px 20px',
+        paddingTop: '45px',
         zIndex: 1000,
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center'
+        boxShadow: '0 4px 20px rgba(255, 59, 48, 0.2)'
       }}>
         <div style={{
-          background: 'white',
-          borderRadius: '12px',
-          padding: '12px 16px',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
           display: 'flex',
-          alignItems: 'center',
-          flex: 1,
-          marginRight: '15px'
+          justifyContent: 'space-between',
+          alignItems: 'center'
         }}>
-          <div style={{ fontSize: '16px', marginRight: '8px' }}>📍</div>
-          <div>
-            <div style={{ fontSize: '14px', fontWeight: '600', color: '#333' }}>
-              {user.homeAddress?.address || 'Set your location'}
-            </div>
-            <div style={{ fontSize: '12px', color: '#666' }}>Delivery address</div>
-          </div>
-        </div>
-        <button 
-          onClick={() => navigate('/profile')}
-          style={{
-            width: '48px',
-            height: '48px',
-            background: '#FF3B30',
-            border: 'none',
+          <div style={{
+            background: 'rgba(255,255,255,0.2)',
             borderRadius: '12px',
-            color: 'white',
-            fontSize: '18px',
-            fontWeight: 'bold',
-            cursor: 'pointer',
-            boxShadow: '0 4px 15px rgba(255, 59, 48, 0.3)'
-          }}
-        >
-          {user.name?.charAt(0) || 'U'}
-        </button>
+            padding: '12px 16px',
+            display: 'flex',
+            alignItems: 'center',
+            flex: 1,
+            marginRight: '15px',
+            backdropFilter: 'blur(10px)'
+          }}>
+            <div style={{ fontSize: '16px', marginRight: '8px' }}>📍</div>
+            <div>
+              <div style={{ fontSize: '14px', fontWeight: '600', color: 'white' }}>
+                {user.homeAddress?.address || 'Set your location'}
+              </div>
+              <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.8)' }}>Delivery address</div>
+            </div>
+          </div>
+          <button 
+            onClick={() => navigate('/profile')}
+            style={{
+              width: '48px',
+              height: '48px',
+              background: 'rgba(255,255,255,0.2)',
+              border: '2px solid rgba(255,255,255,0.3)',
+              borderRadius: '12px',
+              color: 'white',
+              fontSize: '18px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              backdropFilter: 'blur(10px)'
+            }}
+          >
+            {user.name?.charAt(0) || 'U'}
+          </button>
+        </div>
       </div>
 
       {/* Map Section */}
-      <div style={{ position: 'relative', height: '60vh', width: '100%', marginTop: '80px' }}>
+      <div style={{ position: 'relative', height: '60vh', width: '100%', marginTop: '120px' }}>
         <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
         
         {/* Drivers Counter */}
