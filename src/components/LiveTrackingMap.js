@@ -25,7 +25,7 @@ const LiveTrackingMap = ({ request, user }) => {
     if (map && request) {
       updateMapMarkers();
     }
-  }, [map, request, driverLocation, userLocation]);
+  }, [map, request, driverLocation]);
 
   const initMap = () => {
     if (!mapRef.current || !window.L || map) return;
@@ -128,15 +128,18 @@ const LiveTrackingMap = ({ request, user }) => {
   };
 
   const updateMapMarkers = () => {
-    if (!map || !userLocation) return;
+    if (!map || !request) return;
     
     Object.values(markers).forEach(marker => map.removeLayer(marker));
     
     const newMarkers = {};
     
-    // User location marker (real GPS location)
+    // User location marker (delivery address)
+    const userLat = request.deliveryLocation.latitude;
+    const userLng = request.deliveryLocation.longitude;
+    
     newMarkers.user = window.L.marker(
-      [userLocation.latitude, userLocation.longitude],
+      [userLat, userLng],
       {
         icon: window.L.divIcon({
           html: `<div style="font-size: 24px;">📍</div>`,
@@ -167,7 +170,7 @@ const LiveTrackingMap = ({ request, user }) => {
       }
       
       const newRouteLine = window.L.polyline([
-        [userLocation.latitude, userLocation.longitude],
+        [userLat, userLng],
         [driverLocation.latitude, driverLocation.longitude]
       ], {
         color: '#667eea',
