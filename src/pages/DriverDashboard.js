@@ -4,10 +4,11 @@ import axios from 'axios';
 import LocationTracker from '../utils/locationTracker';
 import DriverLocationSharer from '../components/DriverLocationSharer';
 import TrackingTest from '../components/TrackingTest';
+import ChatWindow from '../components/ChatWindow';
+import NotificationSystem from '../components/NotificationSystem';
 import io from 'socket.io-client';
-
-
 import { API_BASE_URL } from '../config';
+import '../styles/comfort.css';
 
 function DriverDashboard({ user }) {
   const [pendingRequests, setPendingRequests] = useState([]);
@@ -17,6 +18,8 @@ function DriverDashboard({ user }) {
   const [activeTab, setActiveTab] = useState('available');
   const [locationTracker] = useState(new LocationTracker(user._id));
   const [currentLocation, setCurrentLocation] = useState(null);
+  const [showChat, setShowChat] = useState(false);
+  const [activeChatRequest, setActiveChatRequest] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -376,12 +379,54 @@ function DriverDashboard({ user }) {
               )}
               
               {request.status === 'delivering' && (
+                <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
+                  <button 
+                    onClick={() => {
+                      setActiveChatRequest(request);
+                      setShowChat(true);
+                    }}
+                    style={{
+                      background: '#8b5cf6',
+                      color: 'white',
+                      border: 'none',
+                      padding: '12px 20px',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      fontWeight: '500',
+                      flex: 1
+                    }}
+                  >
+                    💬 Chat with Customer
+                  </button>
+                  <button 
+                    className="btn-secondary"
+                    onClick={() => updateRequestStatus(request._id, 'completed')}
+                    style={{ flex: 1 }}
+                  >
+                    Mark as Delivered
+                  </button>
+                </div>
+              )}
+              
+              {['accepted', 'shopping'].includes(request.status) && (
                 <button 
-                  className="btn-secondary"
-                  onClick={() => updateRequestStatus(request._id, 'completed')}
-                  style={{ marginTop: '15px' }}
+                  onClick={() => {
+                    setActiveChatRequest(request);
+                    setShowChat(true);
+                  }}
+                  style={{
+                    background: '#8b5cf6',
+                    color: 'white',
+                    border: 'none',
+                    padding: '12px 20px',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    marginTop: '10px',
+                    width: '100%'
+                  }}
                 >
-                  Mark as Delivered
+                  💬 Chat with Customer
                 </button>
               )}
             </div>
