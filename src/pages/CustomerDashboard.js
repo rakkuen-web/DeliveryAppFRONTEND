@@ -4,6 +4,7 @@ import axios from 'axios';
 import io from 'socket.io-client';
 import { getUserCity } from '../utils/cityDetector';
 import { API_BASE_URL, SOCKET_URL } from '../config';
+import '../styles/animations.css';
 
 const socket = io(SOCKET_URL);
 
@@ -326,29 +327,107 @@ function CustomerDashboard({ user }) {
   }
 
   return (
-    <div className="container">
-      {/* inDrive Header */}
-      <div className="indrive-header">
-        <div className="header-top">
-          <button className="menu-btn">☰</button>
-          <button className="profile-btn" onClick={() => navigate('/profile')}>
+    <div style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', minHeight: '100vh' }}>
+      {/* Modern Header */}
+      <div className="fade-in" style={{
+        background: 'rgba(255,255,255,0.1)',
+        backdropFilter: 'blur(20px)',
+        padding: '20px',
+        borderRadius: '0 0 30px 30px',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div className="pulse" style={{
+              width: '50px',
+              height: '50px',
+              background: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)',
+              borderRadius: '15px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '24px',
+              marginRight: '15px',
+              boxShadow: '0 8px 25px rgba(255, 107, 53, 0.3)'
+            }}>🚀</div>
+            <div>
+              <div style={{ color: 'white', fontSize: '24px', fontWeight: '700' }}>DeliveryPro</div>
+              <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px' }}>Fast & Reliable</div>
+            </div>
+          </div>
+          <button 
+            className="bounce"
+            onClick={() => navigate('/profile')}
+            style={{
+              width: '50px',
+              height: '50px',
+              background: 'rgba(255,255,255,0.2)',
+              border: '2px solid rgba(255,255,255,0.3)',
+              borderRadius: '15px',
+              color: 'white',
+              fontSize: '20px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease'
+            }}
+          >
             {user.name?.charAt(0) || 'U'}
           </button>
         </div>
         
-        <div className="location-section">
-          <div className="location-label">Your location</div>
-          <div className="location-text">
-            📍 {user.address || 'Set your location'}
+        <div style={{
+          background: 'rgba(255,255,255,0.15)',
+          borderRadius: '20px',
+          padding: '15px',
+          backdropFilter: 'blur(10px)'
+        }}>
+          <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px', marginBottom: '5px' }}>Your location</div>
+          <div style={{ color: 'white', fontSize: '16px', fontWeight: '600' }}>
+            📍 {user.homeAddress?.address || 'Set your location'}
           </div>
         </div>
       </div>
 
-      {/* Map */}
-      <div className="map-section">
-        <div className="map-overlay">
-          <div>📍 Find drivers nearby</div>
-          <div className="drivers-online">{availableDrivers.length} online</div>
+      {/* Map Section */}
+      <div className="slide-up" style={{
+        margin: '20px',
+        borderRadius: '25px',
+        overflow: 'hidden',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
+        position: 'relative',
+        height: '300px'
+      }}>
+        <div style={{
+          position: 'absolute',
+          top: '20px',
+          left: '20px',
+          right: '20px',
+          zIndex: 1000,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <div style={{
+            background: 'rgba(0,0,0,0.7)',
+            backdropFilter: 'blur(10px)',
+            padding: '10px 15px',
+            borderRadius: '15px',
+            color: 'white',
+            fontSize: '14px',
+            fontWeight: '600'
+          }}>
+            📍 Find drivers nearby
+          </div>
+          <div className="pulse" style={{
+            background: availableDrivers.length > 0 ? 'linear-gradient(135deg, #00D084 0%, #00A86B 100%)' : 'rgba(255,255,255,0.2)',
+            padding: '8px 12px',
+            borderRadius: '12px',
+            color: 'white',
+            fontSize: '12px',
+            fontWeight: 'bold'
+          }}>
+            {availableDrivers.length} online
+          </div>
         </div>
         <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
       </div>
