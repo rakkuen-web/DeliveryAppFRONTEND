@@ -46,15 +46,15 @@ const LiveTrackingMap = ({ request, user }) => {
   const initMap = () => {
     if (!mapRef.current || !window.L || map) return;
     
-    // Use delivery location from request
-    const userLat = request.deliveryLocation.latitude;
-    const userLng = request.deliveryLocation.longitude;
+    // Use customer data for initial zoom
+    const userLat = customerData?.homeAddress?.latitude || request.deliveryLocation.latitude || 33.5731;
+    const userLng = customerData?.homeAddress?.longitude || request.deliveryLocation.longitude || -7.5898;
     setUserLocation({ latitude: userLat, longitude: userLng });
     
     const leafletMap = window.L.map(mapRef.current, {
       zoomControl: false,
       attributionControl: false
-    }).setView([userLat, userLng], 20);
+    }).setView([userLat, userLng], 16);
     
     window.L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
       attribution: '',
@@ -204,12 +204,15 @@ const LiveTrackingMap = ({ request, user }) => {
         
         setRouteLine(newRouteLine);
         
-        // Fit map to show both user and driver
-        const bounds = window.L.latLngBounds([
-          [userLat, userLng],
-          [driverLocation.latitude, driverLocation.longitude]
-        ]);
-        map.fitBounds(bounds, { padding: [50, 50] });
+        // Only fit bounds if driver is close (within reasonable distance)
+        const distance = map.distance([userLat, userLng], [driverLocation.latitude, driverLocation.longitude]);
+        if (distance < 5000) { // 5km radius
+          const bounds = window.L.latLngBounds([
+            [userLat, userLng],
+            [driverLocation.latitude, driverLocation.longitude]
+          ]);
+          map.fitBounds(bounds, { padding: [50, 50] });
+        }
       }
     }
     
