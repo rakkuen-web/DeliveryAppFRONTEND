@@ -142,20 +142,23 @@ const LiveTrackingMap = ({ request, user }) => {
     
     console.log('User location:', userLat, userLng);
     
-    newMarkers.user = window.L.marker(
-      [userLat, userLng],
-      {
-        icon: window.L.divIcon({
-          html: `<div style="font-size: 24px;">📍</div>`,
-          className: 'user-marker',
-          iconSize: [24, 24],
-          iconAnchor: [12, 24]
-        })
-      }
-    ).addTo(map);
+    // Only add user marker if coordinates are valid
+    if (userLat && userLng) {
+      newMarkers.user = window.L.marker(
+        [userLat, userLng],
+        {
+          icon: window.L.divIcon({
+            html: `<div style="font-size: 24px;">📍</div>`,
+            className: 'user-marker',
+            iconSize: [24, 24],
+            iconAnchor: [12, 24]
+          })
+        }
+      ).addTo(map);
+    }
     
     // Driver location marker (if available)
-    if (driverLocation) {
+    if (driverLocation && driverLocation.latitude && driverLocation.longitude) {
       console.log('Driver location:', driverLocation.latitude, driverLocation.longitude);
       
       newMarkers.driver = window.L.marker(
@@ -170,21 +173,23 @@ const LiveTrackingMap = ({ request, user }) => {
         }
       ).addTo(map);
       
-      // Draw line between user and driver
-      if (routeLine) {
+      // Draw line between user and driver (only if both have valid coordinates)
+      if (userLat && userLng && routeLine) {
         map.removeLayer(routeLine);
       }
       
-      const newRouteLine = window.L.polyline([
-        [userLat, userLng],
-        [driverLocation.latitude, driverLocation.longitude]
-      ], {
-        color: '#667eea',
-        weight: 3,
-        opacity: 0.8
-      }).addTo(map);
-      
-      setRouteLine(newRouteLine);
+      if (userLat && userLng) {
+        const newRouteLine = window.L.polyline([
+          [userLat, userLng],
+          [driverLocation.latitude, driverLocation.longitude]
+        ], {
+          color: '#667eea',
+          weight: 3,
+          opacity: 0.8
+        }).addTo(map);
+        
+        setRouteLine(newRouteLine);
+      }
     }
     
     setMarkers(newMarkers);
