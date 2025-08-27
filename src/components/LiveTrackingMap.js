@@ -26,11 +26,12 @@ const LiveTrackingMap = ({ request, user }) => {
   const loadCustomerData = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${API_URL}/users/${request.customerId}`, {
+      const response = await axios.get(`${API_URL}/users/${request.customerId._id || request.customerId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setCustomerData(response.data);
       console.log('Customer data loaded:', response.data.homeAddress);
+      console.log('Customer ID used:', request.customerId._id || request.customerId);
     } catch (error) {
       console.error('Error loading customer data:', error);
     }
