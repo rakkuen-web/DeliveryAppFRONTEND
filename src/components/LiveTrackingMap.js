@@ -9,6 +9,7 @@ const LiveTrackingMap = ({ request, user }) => {
   const [map, setMap] = useState(null);
   const [driverLocation, setDriverLocation] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
+  const [customerData, setCustomerData] = useState(null);
   const [markers, setMarkers] = useState({});
   const [eta, setEta] = useState(null);
   const [routeLine, setRouteLine] = useState(null);
@@ -17,15 +18,29 @@ const LiveTrackingMap = ({ request, user }) => {
     if (request) {
       initMap();
       startLocationTracking();
+      loadCustomerData();
     }
     return () => stopLocationTracking();
   }, [request]);
+  
+  const loadCustomerData = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${API_URL}/users/${request.customerId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setCustomerData(response.data);
+      console.log('Customer data loaded:', response.data.homeAddress);
+    } catch (error) {
+      console.error('Error loading customer data:', error);
+    }
+  };
 
   useEffect(() => {
     if (map && request) {
       updateMapMarkers();
     }
-  }, [map, request, driverLocation]);
+  }, [map, request, driverLocation, customerData]);
 
   const initMap = () => {
     if (!mapRef.current || !window.L || map) return;
@@ -136,9 +151,9 @@ const LiveTrackingMap = ({ request, user }) => {
     
     const newMarkers = {};
     
-    // User location marker (use customerAddress as backup)
-    const userLat = request.deliveryLocation.latitude || request.customerAddress?.latitude;
-    const userLng = request.deliveryLocation.longitude || request.customerAddress?.longitude;
+    // User location marker (use customer data from API)
+    const userLat = customerData?.homeAddress?.latitude || request.deliveryLocation.latitude;
+    const userLng = customerData?.homeAddress?.longitude || request.deliveryLocation.longitude;
     
     console.log('User location:', userLat, userLng);
     
