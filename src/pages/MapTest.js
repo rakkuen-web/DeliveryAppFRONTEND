@@ -23,7 +23,7 @@ function MapTest() {
       attributionControl: false
     }).setView([33.5731, -7.5898], 13); // Casablanca
 
-    window.L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+    window.L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
       attribution: '',
       maxZoom: 20
     }).addTo(leafletMap);
@@ -42,17 +42,37 @@ function MapTest() {
     if (!map) return;
 
     const icon = window.L.divIcon({
-      html: `<div style="
-        width: 40px; height: 40px;
-        background: ${currentMode === 'pickup' ? '#10b981' : '#6366f1'};
-        border-radius: 50%; border: 3px solid white;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 18px; color: white;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      ">${currentMode === 'pickup' ? '📍' : '🎯'}</div>`,
-      className: 'custom-marker',
-      iconSize: [40, 40],
-      iconAnchor: [20, 20]
+      html: `
+        <div style="
+          width: 50px; height: 50px;
+          background: ${currentMode === 'pickup' ? '#00D084' : '#00D084'};
+          border-radius: 50%;
+          border: 4px solid white;
+          display: flex; align-items: center; justify-content: center;
+          box-shadow: 0 4px 20px rgba(0, 208, 132, 0.4);
+          position: relative;
+        ">
+          <div style="
+            width: 20px; height: 20px;
+            background: white;
+            border-radius: 50%;
+          "></div>
+        </div>
+        <div style="
+          position: absolute;
+          top: -8px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0;
+          height: 0;
+          border-left: 8px solid transparent;
+          border-right: 8px solid transparent;
+          border-bottom: 12px solid ${currentMode === 'pickup' ? '#00D084' : '#00D084'};
+        "></div>
+      `,
+      className: 'glovo-marker',
+      iconSize: [50, 62],
+      iconAnchor: [25, 62]
     });
 
     const marker = window.L.marker([lat, lng], { icon }).addTo(map);
@@ -71,6 +91,42 @@ function MapTest() {
       const { lat, lng } = e.target.getLatLng();
       reverseGeocode(lat, lng);
     });
+    
+    // Add Glovo-style popup
+    const popupContent = `
+      <div style="
+        font-family: 'Inter', sans-serif;
+        text-align: center;
+        padding: 16px;
+        min-width: 200px;
+      ">
+        <div style="
+          font-size: 18px;
+          font-weight: 600;
+          margin-bottom: 12px;
+          color: #1f2937;
+        ">
+          ${currentMode === 'pickup' ? 'Pickup Location' : 'Drop-off Location'}
+        </div>
+        <button style="
+          background: #00D084;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 8px;
+          font-weight: 600;
+          cursor: pointer;
+          font-size: 14px;
+        " onclick="alert('Location confirmed!')">
+          Use this point
+        </button>
+      </div>
+    `;
+    
+    marker.bindPopup(popupContent, {
+      offset: [0, -62],
+      className: 'glovo-popup'
+    }).openPopup();
   };
 
   const reverseGeocode = async (lat, lng) => {
