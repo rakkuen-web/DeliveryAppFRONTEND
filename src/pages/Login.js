@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../styles/glovo.css';
+import '../styles/comfort.css';
 import { API_BASE_URL } from '../config';
 
 function Login({ setUser }) {
@@ -67,107 +67,148 @@ function Login({ setUser }) {
   };
 
   return (
-    <div className="glovo-container">
-      {/* Glovo Header */}
-      <div className="glovo-header fade-in" style={{ textAlign: 'center' }}>
-        <div className="pulse" style={{
+    <div className="comfort-container">
+      {/* Header */}
+      <div className="comfort-header fade-in text-center">
+        <div className="gentle-bounce" style={{
           width: '80px',
           height: '80px',
-          background: 'rgba(255,255,255,0.2)',
+          background: 'rgba(255, 255, 255, 0.2)',
           borderRadius: '20px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          margin: '0 auto 20px',
+          margin: '0 auto 24px',
           fontSize: '40px',
           backdropFilter: 'blur(10px)'
         }}>
-          🚀
+          🚚
         </div>
         <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px' }}>
-          DeliveryPro
+          SwiftDelivery
         </h1>
         <p style={{ fontSize: '16px', opacity: 0.9 }}>
-          Fast & Reliable Delivery
+          Your trusted delivery partner
         </p>
       </div>
 
-      {/* Login Card */}
-      <div style={{ padding: '20px', marginTop: '-20px' }}>
-        <div className="glovo-card slide-up" style={{
+      {/* Login Form */}
+      <div style={{ padding: '24px', marginTop: '-20px' }}>
+        <div className="comfort-card slide-up" style={{
+          maxWidth: '400px',
+          margin: '0 auto',
           position: 'relative',
-          zIndex: 10,
-          padding: '30px'
+          zIndex: 10
         }}>
-          <h2 style={{ 
-            textAlign: 'center', 
-            marginBottom: '30px',
-            fontSize: '24px',
-            fontWeight: '600'
-          }}>
-            {isSignUp ? 'Join DeliveryPro' : 'Welcome Back'}
+          <h2 className="text-center mb-6" style={{ fontSize: '24px', fontWeight: '600' }}>
+            {isSignUp ? 'Create Account' : 'Welcome Back'}
           </h2>
           
           <form onSubmit={handleSubmit}>
             {isSignUp && (
-              <div style={{ marginBottom: '20px' }}>
+              <div className="mb-4">
+                <label style={{ 
+                  display: 'block', 
+                  marginBottom: '8px', 
+                  fontSize: '14px', 
+                  fontWeight: '500',
+                  color: 'var(--text)'
+                }}>
+                  Full Name
+                </label>
                 <input
                   type="text"
                   name="name"
-                  placeholder="Full Name"
+                  placeholder="Enter your full name"
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="glovo-input"
+                  className="comfort-input"
                 />
               </div>
             )}
 
-            <div style={{ marginBottom: '20px' }}>
+            <div className="mb-4">
+              <label style={{ 
+                display: 'block', 
+                marginBottom: '8px', 
+                fontSize: '14px', 
+                fontWeight: '500',
+                color: 'var(--text)'
+              }}>
+                Email Address
+              </label>
               <input
                 type="email"
                 name="email"
-                placeholder="Email Address"
+                placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleInputChange}
                 required
-                className="glovo-input"
+                className="comfort-input"
               />
             </div>
 
             {isSignUp && (
-              <div style={{ marginBottom: '20px' }}>
+              <div className="mb-4">
+                <label style={{ 
+                  display: 'block', 
+                  marginBottom: '8px', 
+                  fontSize: '14px', 
+                  fontWeight: '500',
+                  color: 'var(--text)'
+                }}>
+                  Phone Number
+                </label>
                 <input
                   type="tel"
                   name="phone"
-                  placeholder="Phone Number"
+                  placeholder="Enter your phone number"
                   value={formData.phone}
                   onChange={handleInputChange}
                   required
-                  className="glovo-input"
+                  className="comfort-input"
                 />
               </div>
             )}
 
-            <div style={{ marginBottom: '20px' }}>
+            <div className="mb-4">
+              <label style={{ 
+                display: 'block', 
+                marginBottom: '8px', 
+                fontSize: '14px', 
+                fontWeight: '500',
+                color: 'var(--text)'
+              }}>
+                Password
+              </label>
               <input
                 type="password"
                 name="password"
-                placeholder="Password"
+                placeholder="Enter your password"
                 value={formData.password}
                 onChange={handleInputChange}
                 required
-                className="glovo-input"
+                className="comfort-input"
               />
             </div>
 
             {isSignUp && (
-              <div style={{ marginBottom: '25px' }}>
+              <div className="mb-6">
+                <label style={{ 
+                  display: 'block', 
+                  marginBottom: '8px', 
+                  fontSize: '14px', 
+                  fontWeight: '500',
+                  color: 'var(--text)'
+                }}>
+                  Account Type
+                </label>
                 <select 
                   name="userType" 
                   value={formData.userType} 
                   onChange={handleInputChange}
-                  className="glovo-input"
+                  className="comfort-input"
                 >
                   <option value="customer">🛒 Customer</option>
                   <option value="driver">🚗 Driver</option>
@@ -178,18 +219,28 @@ function Login({ setUser }) {
             <button 
               type="submit" 
               disabled={loading}
-              className="glovo-button"
+              className="comfort-button"
               style={{
                 width: '100%',
                 marginBottom: '20px',
-                opacity: loading ? 0.7 : 1
+                opacity: loading ? 0.7 : 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
             >
-              {loading ? '⏳ Please wait...' : (isSignUp ? '🚀 Create Account' : '🔑 Sign In')}
+              {loading ? (
+                <>
+                  <div className="comfort-loading" style={{ marginRight: '8px' }}></div>
+                  Please wait...
+                </>
+              ) : (
+                isSignUp ? 'Create Account' : 'Sign In'
+              )}
             </button>
           </form>
 
-          <div style={{ textAlign: 'center' }}>
+          <div className="text-center">
             <button 
               onClick={() => setIsSignUp(!isSignUp)}
               style={{ 
@@ -197,8 +248,9 @@ function Login({ setUser }) {
                 border: 'none', 
                 color: 'var(--primary)', 
                 fontSize: '14px',
-                fontWeight: '600',
-                cursor: 'pointer'
+                fontWeight: '500',
+                cursor: 'pointer',
+                textDecoration: 'underline'
               }}
             >
               {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
@@ -206,39 +258,47 @@ function Login({ setUser }) {
           </div>
         </div>
 
-        {/* Quick Test Login */}
-        <div className="glovo-card fade-in" style={{ animationDelay: '0.3s' }}>
-          <h3 style={{ fontSize: '16px', marginBottom: '15px', textAlign: 'center' }}>
-            🚀 Quick Demo Access
+        {/* Quick Demo */}
+        <div className="comfort-card fade-in" style={{ 
+          maxWidth: '400px', 
+          margin: '16px auto 0',
+          animationDelay: '0.2s'
+        }}>
+          <h3 className="text-center mb-4" style={{ fontSize: '16px', fontWeight: '600' }}>
+            Quick Demo Access
           </h3>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <button 
               onClick={() => setFormData({...formData, email: 'customer@test.com', password: 'password123'})}
               style={{
-                padding: '15px',
-                background: '#F8F9FA',
+                padding: '12px',
+                background: 'var(--background)',
                 border: '2px solid var(--border)',
-                borderRadius: '12px',
+                borderRadius: 'var(--radius)',
                 fontSize: '14px',
-                fontWeight: '600',
+                fontWeight: '500',
                 cursor: 'pointer',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.2s ease'
               }}
+              onMouseEnter={(e) => e.target.style.borderColor = 'var(--primary)'}
+              onMouseLeave={(e) => e.target.style.borderColor = 'var(--border)'}
             >
               🛒 Customer
             </button>
             <button 
               onClick={() => setFormData({...formData, email: 'driver@test.com', password: 'password123'})}
               style={{
-                padding: '15px',
-                background: '#F8F9FA',
+                padding: '12px',
+                background: 'var(--background)',
                 border: '2px solid var(--border)',
-                borderRadius: '12px',
+                borderRadius: 'var(--radius)',
                 fontSize: '14px',
-                fontWeight: '600',
+                fontWeight: '500',
                 cursor: 'pointer',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.2s ease'
               }}
+              onMouseEnter={(e) => e.target.style.borderColor = 'var(--primary)'}
+              onMouseLeave={(e) => e.target.style.borderColor = 'var(--border)'}
             >
               🚗 Driver
             </button>
