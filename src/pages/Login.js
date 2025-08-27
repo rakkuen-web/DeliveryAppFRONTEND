@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import '../styles/glovo.css';
 import { API_BASE_URL } from '../config';
 
 function Login({ setUser }) {
@@ -28,7 +28,6 @@ function Login({ setUser }) {
     try {
       let signupData = { ...formData };
       
-      // Get GPS location for drivers during signup
       if (isSignUp && formData.userType === 'driver') {
         try {
           const position = await new Promise((resolve, reject) => {
@@ -45,7 +44,6 @@ function Login({ setUser }) {
             address: `${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`
           };
         } catch (gpsError) {
-          // Fallback to Casablanca coordinates if GPS fails
           signupData.location = {
             latitude: 33.5731,
             longitude: -7.5898,
@@ -69,49 +67,50 @@ function Login({ setUser }) {
   };
 
   return (
-    <div className="container">
-      {/* Header */}
-      <div className="indrive-header" style={{ textAlign: 'center', paddingBottom: '40px' }}>
-        <img 
-          src="/logo.png" 
-          alt="Delivery Connect" 
-          style={{
-            width: '80px',
-            height: '80px',
-            borderRadius: '16px',
-            marginBottom: '16px'
-          }}
-        />
-        <h1 style={{ fontSize: '28px', fontWeight: '700', marginBottom: '8px' }}>
-          DeliveryConnect
+    <div className="glovo-container">
+      {/* Glovo Header */}
+      <div className="glovo-header fade-in" style={{ textAlign: 'center' }}>
+        <div className="pulse" style={{
+          width: '80px',
+          height: '80px',
+          background: 'rgba(255,255,255,0.2)',
+          borderRadius: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          margin: '0 auto 20px',
+          fontSize: '40px',
+          backdropFilter: 'blur(10px)'
+        }}>
+          🚀
+        </div>
+        <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px' }}>
+          DeliveryPro
         </h1>
-        <p style={{ fontSize: '16px', opacity: '0.9' }}>
-          Get anything delivered fast
+        <p style={{ fontSize: '16px', opacity: 0.9 }}>
+          Fast & Reliable Delivery
         </p>
       </div>
 
-      {/* Login Form */}
-      <div style={{ padding: '0 20px' }}>
-        <div style={{
-          background: 'white',
-          borderRadius: '16px',
-          padding: '24px',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
-          marginBottom: '20px'
+      {/* Login Card */}
+      <div style={{ padding: '20px', marginTop: '-20px' }}>
+        <div className="glovo-card slide-up" style={{
+          position: 'relative',
+          zIndex: 10,
+          padding: '30px'
         }}>
           <h2 style={{ 
             textAlign: 'center', 
-            marginBottom: '24px',
-            fontSize: '20px',
-            fontWeight: '600',
-            color: '#333'
+            marginBottom: '30px',
+            fontSize: '24px',
+            fontWeight: '600'
           }}>
-            {isSignUp ? 'Create Account' : 'Welcome Back'}
+            {isSignUp ? 'Join DeliveryPro' : 'Welcome Back'}
           </h2>
           
           <form onSubmit={handleSubmit}>
             {isSignUp && (
-              <div style={{ marginBottom: '16px' }}>
+              <div style={{ marginBottom: '20px' }}>
                 <input
                   type="text"
                   name="name"
@@ -119,19 +118,12 @@ function Login({ setUser }) {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  style={{
-                    width: '100%',
-                    padding: '16px',
-                    border: '1px solid #e0e0e0',
-                    borderRadius: '12px',
-                    fontSize: '16px',
-                    outline: 'none'
-                  }}
+                  className="glovo-input"
                 />
               </div>
             )}
 
-            <div style={{ marginBottom: '16px' }}>
+            <div style={{ marginBottom: '20px' }}>
               <input
                 type="email"
                 name="email"
@@ -139,19 +131,12 @@ function Login({ setUser }) {
                 value={formData.email}
                 onChange={handleInputChange}
                 required
-                style={{
-                  width: '100%',
-                  padding: '16px',
-                  border: '1px solid #e0e0e0',
-                  borderRadius: '12px',
-                  fontSize: '16px',
-                  outline: 'none'
-                }}
+                className="glovo-input"
               />
             </div>
 
             {isSignUp && (
-              <div style={{ marginBottom: '16px' }}>
+              <div style={{ marginBottom: '20px' }}>
                 <input
                   type="tel"
                   name="phone"
@@ -159,19 +144,12 @@ function Login({ setUser }) {
                   value={formData.phone}
                   onChange={handleInputChange}
                   required
-                  style={{
-                    width: '100%',
-                    padding: '16px',
-                    border: '1px solid #e0e0e0',
-                    borderRadius: '12px',
-                    fontSize: '16px',
-                    outline: 'none'
-                  }}
+                  className="glovo-input"
                 />
               </div>
             )}
 
-            <div style={{ marginBottom: '16px' }}>
+            <div style={{ marginBottom: '20px' }}>
               <input
                 type="password"
                 name="password"
@@ -179,35 +157,20 @@ function Login({ setUser }) {
                 value={formData.password}
                 onChange={handleInputChange}
                 required
-                style={{
-                  width: '100%',
-                  padding: '16px',
-                  border: '1px solid #e0e0e0',
-                  borderRadius: '12px',
-                  fontSize: '16px',
-                  outline: 'none'
-                }}
+                className="glovo-input"
               />
             </div>
 
             {isSignUp && (
-              <div style={{ marginBottom: '20px' }}>
+              <div style={{ marginBottom: '25px' }}>
                 <select 
                   name="userType" 
                   value={formData.userType} 
                   onChange={handleInputChange}
-                  style={{
-                    width: '100%',
-                    padding: '16px',
-                    border: '1px solid #e0e0e0',
-                    borderRadius: '12px',
-                    fontSize: '16px',
-                    outline: 'none',
-                    background: 'white'
-                  }}
+                  className="glovo-input"
                 >
-                  <option value="customer">Customer</option>
-                  <option value="driver">Driver</option>
+                  <option value="customer">🛒 Customer</option>
+                  <option value="driver">🚗 Driver</option>
                 </select>
               </div>
             )}
@@ -215,20 +178,14 @@ function Login({ setUser }) {
             <button 
               type="submit" 
               disabled={loading}
+              className="glovo-button"
               style={{
                 width: '100%',
-                padding: '16px',
-                background: loading ? '#ccc' : 'linear-gradient(135deg, #28a745 0%, #20c997 100%)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '12px',
-                fontSize: '16px',
-                fontWeight: '600',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                marginBottom: '16px'
+                marginBottom: '20px',
+                opacity: loading ? 0.7 : 1
               }}
             >
-              {loading ? 'Please wait...' : (isSignUp ? 'Create Account' : 'Sign In')}
+              {loading ? '⏳ Please wait...' : (isSignUp ? '🚀 Create Account' : '🔑 Sign In')}
             </button>
           </form>
 
@@ -238,7 +195,7 @@ function Login({ setUser }) {
               style={{ 
                 background: 'none', 
                 border: 'none', 
-                color: '#28a745', 
+                color: 'var(--primary)', 
                 fontSize: '14px',
                 fontWeight: '600',
                 cursor: 'pointer'
@@ -249,40 +206,41 @@ function Login({ setUser }) {
           </div>
         </div>
 
-        {/* Quick Login */}
-        <div style={{
-          background: 'white',
-          borderRadius: '16px',
-          padding: '20px',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
-        }}>
-          <h3 style={{ fontSize: '16px', marginBottom: '12px', color: '#333' }}>Quick Test Login</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+        {/* Quick Test Login */}
+        <div className="glovo-card fade-in" style={{ animationDelay: '0.3s' }}>
+          <h3 style={{ fontSize: '16px', marginBottom: '15px', textAlign: 'center' }}>
+            🚀 Quick Demo Access
+          </h3>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <button 
               onClick={() => setFormData({...formData, email: 'customer@test.com', password: 'password123'})}
               style={{
-                padding: '12px',
-                background: '#f8f9fa',
-                border: '1px solid #e0e0e0',
-                borderRadius: '8px',
+                padding: '15px',
+                background: '#F8F9FA',
+                border: '2px solid var(--border)',
+                borderRadius: '12px',
                 fontSize: '14px',
-                cursor: 'pointer'
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
               }}
             >
-              Customer
+              🛒 Customer
             </button>
             <button 
               onClick={() => setFormData({...formData, email: 'driver@test.com', password: 'password123'})}
               style={{
-                padding: '12px',
-                background: '#f8f9fa',
-                border: '1px solid #e0e0e0',
-                borderRadius: '8px',
+                padding: '15px',
+                background: '#F8F9FA',
+                border: '2px solid var(--border)',
+                borderRadius: '12px',
                 fontSize: '14px',
-                cursor: 'pointer'
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
               }}
             >
-              Driver
+              🚗 Driver
             </button>
           </div>
         </div>
