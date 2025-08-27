@@ -89,14 +89,14 @@ function CreateRequest({ user }) {
           address: formData.store
         },
         deliveryLocation: {
-          latitude: formData.deliveryLocation?.latitude || user.homeAddress?.latitude || 0,
-          longitude: formData.deliveryLocation?.longitude || user.homeAddress?.longitude || 0,
-          address: formData.deliveryLocation?.address || user.homeAddress?.address || 'Unknown'
+          latitude: user.homeAddress?.latitude || 31.654026781929705,
+          longitude: user.homeAddress?.longitude || -8.032872676849367,
+          address: user.homeAddress?.address || 'Home Address'
         },
         customerAddress: {
-          latitude: user.homeAddress?.latitude,
-          longitude: user.homeAddress?.longitude,
-          address: user.homeAddress?.address
+          latitude: user.homeAddress?.latitude || 31.654026781929705,
+          longitude: user.homeAddress?.longitude || -8.032872676849367,
+          address: user.homeAddress?.address || 'Home Address'
         }
       };
 
