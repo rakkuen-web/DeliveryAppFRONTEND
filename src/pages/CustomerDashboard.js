@@ -191,43 +191,82 @@ function CustomerDashboard({ user }) {
   if (activeTab === 'drivers') {
     return (
       <div style={{ background: '#fff', minHeight: '100vh' }}>
-        <div style={{ padding: '20px', borderBottom: '1px solid #f0f0f0' }}>
-          <button onClick={() => setActiveTab('home')} style={{ background: 'none', border: 'none', fontSize: '18px' }}>←</button>
-          <span style={{ marginLeft: '15px', fontSize: '18px', fontWeight: 'bold' }}>Available Drivers</span>
+        <div className="fade-in" style={{
+          background: 'linear-gradient(135deg, #FF3B30 0%, #FF6B35 100%)',
+          padding: '20px',
+          paddingTop: '50px',
+          borderRadius: '0 0 25px 25px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+            <button 
+              onClick={() => setActiveTab('home')} 
+              style={{ 
+                background: 'rgba(255,255,255,0.2)', 
+                border: 'none', 
+                borderRadius: '12px',
+                padding: '10px',
+                color: 'white',
+                fontSize: '18px',
+                cursor: 'pointer',
+                marginRight: '15px'
+              }}
+            >←</button>
+            <div>
+              <div style={{ color: 'white', fontSize: '24px', fontWeight: 'bold' }}>Available Drivers</div>
+              <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px' }}>{availableDrivers.length} drivers online</div>
+            </div>
+          </div>
         </div>
+        
         <div style={{ padding: '20px' }}>
           {availableDrivers.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '40px' }}>
-              <div style={{ fontSize: '48px', marginBottom: '10px' }}>🚗</div>
-              <div>No drivers available</div>
+            <div className="fade-in" style={{ textAlign: 'center', padding: '60px 20px' }}>
+              <div style={{ fontSize: '64px', marginBottom: '20px' }}>🚗</div>
+              <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '10px', color: '#333' }}>No drivers available</div>
+              <div style={{ fontSize: '14px', color: '#666' }}>Check back in a few minutes</div>
             </div>
           ) : (
-            availableDrivers.map(driver => (
-              <div key={driver._id} style={{ 
-                background: '#f8f8f8', 
-                borderRadius: '12px', 
-                padding: '15px', 
-                marginBottom: '10px',
+            availableDrivers.map((driver, index) => (
+              <div key={driver._id} className="slide-up" style={{ 
+                background: 'white', 
+                borderRadius: '16px', 
+                padding: '20px', 
+                marginBottom: '15px',
                 display: 'flex',
-                alignItems: 'center'
+                alignItems: 'center',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+                animationDelay: `${index * 0.1}s`
               }}>
-                <div style={{
-                  width: '50px',
-                  height: '50px',
-                  background: '#FF3B30',
+                <div className="pulse" style={{
+                  width: '60px',
+                  height: '60px',
+                  background: 'linear-gradient(135deg, #FF3B30 0%, #FF6B35 100%)',
                   borderRadius: '50%',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: 'white',
                   fontWeight: 'bold',
-                  marginRight: '15px'
+                  fontSize: '20px',
+                  marginRight: '15px',
+                  boxShadow: '0 4px 15px rgba(255, 59, 48, 0.3)'
                 }}>
                   {driver.name?.charAt(0) || 'D'}
                 </div>
-                <div>
-                  <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>{driver.name}</div>
-                  <div style={{ fontSize: '14px', color: '#666' }}>⭐ {driver.rating?.toFixed(1) || '5.0'}</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '5px', color: '#333' }}>{driver.name}</div>
+                  <div style={{ fontSize: '14px', color: '#FF3B30', marginBottom: '5px' }}>⭐ {driver.rating?.toFixed(1) || '5.0'} • Professional</div>
+                  <div style={{ fontSize: '12px', color: '#666' }}>🟢 Available now</div>
+                </div>
+                <div style={{
+                  background: '#FF3B30',
+                  color: 'white',
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  fontSize: '12px',
+                  fontWeight: 'bold'
+                }}>
+                  2 min
                 </div>
               </div>
             ))
@@ -239,39 +278,86 @@ function CustomerDashboard({ user }) {
 
   if (activeTab === 'orders') {
     return (
-      <div style={{ background: '#fff', minHeight: '100vh' }}>
-        <div style={{ padding: '20px', borderBottom: '1px solid #f0f0f0' }}>
-          <button onClick={() => setActiveTab('home')} style={{ background: 'none', border: 'none', fontSize: '18px' }}>←</button>
-          <span style={{ marginLeft: '15px', fontSize: '18px', fontWeight: 'bold' }}>My Orders</span>
+      <div style={{ background: '#f8f9fa', minHeight: '100vh' }}>
+        <div className="fade-in" style={{
+          background: 'linear-gradient(135deg, #FF3B30 0%, #FF6B35 100%)',
+          padding: '20px',
+          paddingTop: '50px',
+          borderRadius: '0 0 25px 25px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+            <button 
+              onClick={() => setActiveTab('home')} 
+              style={{ 
+                background: 'rgba(255,255,255,0.2)', 
+                border: 'none', 
+                borderRadius: '12px',
+                padding: '10px',
+                color: 'white',
+                fontSize: '18px',
+                cursor: 'pointer',
+                marginRight: '15px'
+              }}
+            >←</button>
+            <div>
+              <div style={{ color: 'white', fontSize: '24px', fontWeight: 'bold' }}>My Orders</div>
+              <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px' }}>{requests.length} total orders</div>
+            </div>
+          </div>
         </div>
+        
         <div style={{ padding: '20px' }}>
-          {requests.map(request => (
-            <div key={request._id} onClick={() => navigate(`/track/${request._id}`)} style={{
-              background: '#f8f8f8',
-              borderRadius: '12px',
-              padding: '15px',
-              marginBottom: '10px',
-              cursor: 'pointer'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                  <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>{request.item}</div>
-                  <div style={{ fontSize: '14px', color: '#666' }}>from {request.store}</div>
+          {loading ? (
+            <div className="shimmer" style={{ height: '80px', borderRadius: '16px', marginBottom: '15px' }}></div>
+          ) : requests.length === 0 ? (
+            <div className="fade-in" style={{ textAlign: 'center', padding: '60px 20px' }}>
+              <div style={{ fontSize: '64px', marginBottom: '20px' }}>📦</div>
+              <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '10px', color: '#333' }}>No orders yet</div>
+              <div style={{ fontSize: '14px', color: '#666' }}>Your delivery history will appear here</div>
+            </div>
+          ) : (
+            requests.map((request, index) => (
+              <div 
+                key={request._id} 
+                className="slide-up"
+                onClick={() => navigate(`/track/${request._id}`)} 
+                style={{
+                  background: 'white',
+                  borderRadius: '16px',
+                  padding: '20px',
+                  marginBottom: '15px',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+                  animationDelay: `${index * 0.1}s`,
+                  transition: 'transform 0.2s ease'
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                  <div>
+                    <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '5px', color: '#333' }}>{request.item}</div>
+                    <div style={{ fontSize: '14px', color: '#666' }}>from {request.store}</div>
+                  </div>
+                  <div style={{
+                    background: request.status === 'completed' ? '#00D084' : 
+                               request.status === 'pending' ? '#FF9800' : 
+                               request.status === 'delivering' ? '#2196F3' : '#FF3B30',
+                    color: 'white',
+                    padding: '8px 12px',
+                    borderRadius: '12px',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    textTransform: 'capitalize'
+                  }}>
+                    {request.status}
+                  </div>
                 </div>
-                <div style={{
-                  background: request.status === 'completed' ? '#00D084' : '#FF3B30',
-                  color: 'white',
-                  padding: '6px 12px',
-                  borderRadius: '12px',
-                  fontSize: '12px',
-                  fontWeight: 'bold'
-                }}>
-                  {request.status}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#FF3B30' }}>{request.price} MAD</div>
+                  <div style={{ fontSize: '12px', color: '#666' }}>Tap to track →</div>
                 </div>
               </div>
-              <div style={{ fontWeight: 'bold', marginTop: '10px' }}>{request.price} MAD</div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     );
@@ -327,8 +413,8 @@ function CustomerDashboard({ user }) {
         </button>
       </div>
 
-      {/* Full Screen Map */}
-      <div style={{ position: 'relative', height: '100vh', width: '100%' }}>
+      {/* Map Section */}
+      <div style={{ position: 'relative', height: '60vh', width: '100%', marginTop: '80px' }}>
         <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
         
         {/* Drivers Counter */}
@@ -350,14 +436,13 @@ function CustomerDashboard({ user }) {
 
       {/* Bottom Panel */}
       <div className="slide-up" style={{
-        position: 'absolute',
-        bottom: '0',
-        left: '0',
-        right: '0',
         background: 'white',
         borderRadius: '25px 25px 0 0',
-        padding: '25px 20px 100px',
-        boxShadow: '0 -10px 30px rgba(0,0,0,0.1)'
+        padding: '25px 20px 20px',
+        boxShadow: '0 -10px 30px rgba(0,0,0,0.1)',
+        marginTop: '-25px',
+        position: 'relative',
+        zIndex: 1000
       }}>
         <div style={{
           width: '40px',
