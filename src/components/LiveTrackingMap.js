@@ -16,12 +16,17 @@ const LiveTrackingMap = ({ request, user }) => {
 
   useEffect(() => {
     if (request) {
-      initMap();
-      startLocationTracking();
       loadCustomerData();
+      startLocationTracking();
     }
     return () => stopLocationTracking();
   }, [request]);
+  
+  useEffect(() => {
+    if (request && customerData) {
+      initMap();
+    }
+  }, [request, customerData]);
   
   const loadCustomerData = async () => {
     try {
@@ -44,11 +49,11 @@ const LiveTrackingMap = ({ request, user }) => {
   }, [map, request, driverLocation, customerData]);
 
   const initMap = () => {
-    if (!mapRef.current || !window.L || map) return;
+    if (!mapRef.current || !window.L || map || !customerData) return;
     
     // Use customer data for initial zoom
-    const userLat = customerData?.homeAddress?.latitude || request.deliveryLocation.latitude || 33.5731;
-    const userLng = customerData?.homeAddress?.longitude || request.deliveryLocation.longitude || -7.5898;
+    const userLat = customerData.homeAddress?.latitude || 33.5731;
+    const userLng = customerData.homeAddress?.longitude || -7.5898;
     setUserLocation({ latitude: userLat, longitude: userLng });
     
     const leafletMap = window.L.map(mapRef.current, {
@@ -151,8 +156,8 @@ const LiveTrackingMap = ({ request, user }) => {
     const newMarkers = {};
     
     // User location marker (use customer data from API)
-    const userLat = customerData?.homeAddress?.latitude || request.deliveryLocation.latitude;
-    const userLng = customerData?.homeAddress?.longitude || request.deliveryLocation.longitude;
+    const userLat = customerData?.homeAddress?.latitude;
+    const userLng = customerData?.homeAddress?.longitude;
     
     console.log('User location:', userLat, userLng);
     
