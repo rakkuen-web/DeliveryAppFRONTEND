@@ -8,6 +8,7 @@ import TrackDelivery from './pages/TrackDelivery';
 import Profile from './pages/Profile';
 import CustomerMap from './pages/CustomerMap';
 import LocationSetup from './pages/LocationSetup';
+import MapTest from './pages/MapTest';
 import './App.css';
 
 function App() {
@@ -78,6 +79,8 @@ function App() {
               <CustomerMap user={user} /> : 
               <Navigate to="/" />
           } />
+          
+          <Route path="/map-test" element={<MapTest />} />
         </Routes>
       </div>
     </Router>
