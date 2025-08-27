@@ -54,7 +54,7 @@ const LiveTrackingMap = ({ request, user }) => {
     const leafletMap = window.L.map(mapRef.current, {
       zoomControl: false,
       attributionControl: false
-    }).setView([userLat, userLng], 14);
+    }).setView([userLat, userLng], 20);
     
     window.L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
       attribution: '',
