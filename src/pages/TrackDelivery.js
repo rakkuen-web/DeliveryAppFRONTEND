@@ -2,13 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import LiveTrackingMap from '../components/LiveTrackingMap';
-
-import { API_URL } from '../config';
+import ChatWindow from '../components/ChatWindow';
+import ReviewModal from '../components/ReviewModal';
+import NotificationSystem from '../components/NotificationSystem';
+import { API_BASE_URL } from '../config';
+import '../styles/comfort.css';
 
 function TrackDelivery({ user }) {
   const { requestId } = useParams();
   const [request, setRequest] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showChat, setShowChat] = useState(false);
+  const [showReview, setShowReview] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,12 +26,17 @@ function TrackDelivery({ user }) {
   const loadRequest = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${API_URL}/api/requests/my/${user._id}`, {
+      const response = await axios.get(`${API_BASE_URL}/requests/my/${user._id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
       const foundRequest = response.data.find(r => r._id === requestId);
       setRequest(foundRequest);
+      
+      // Show review modal when completed
+      if (foundRequest && foundRequest.status === 'completed' && !localStorage.getItem(`reviewed-${requestId}`)) {
+        setTimeout(() => setShowReview(true), 1000);
+      }
     } catch (error) {
       console.error('Error loading request:', error);
     }
@@ -202,9 +212,9 @@ function TrackDelivery({ user }) {
                 📞 Call Driver
               </button>
               <button 
-                onClick={() => window.open(`https://wa.me/${request.driverId.phone.replace(/[^0-9]/g, '')}?text=Hi, I'm tracking my delivery order`)}
+                onClick={() => setShowChat(true)}
                 style={{
-                  background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
+                  background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
                   color: 'white',
                   border: 'none',
                   padding: '15px',
@@ -218,12 +228,37 @@ function TrackDelivery({ user }) {
                   gap: '8px'
                 }}
               >
-                💬 WhatsApp
+                💬 Chat
               </button>
             </div>
           </div>
         )}
       </div>
+      
+      {/* Notification System */}
+      <NotificationSystem user={user} />
+      
+      {/* Chat Window */}
+      {showChat && (
+        <ChatWindow 
+          requestId={requestId}
+          user={user}
+          onClose={() => setShowChat(false)}
+        />
+      )}
+      
+      {/* Review Modal */}
+      {showReview && (
+        <ReviewModal 
+          request={request}
+          user={user}
+          onClose={() => setShowReview(false)}
+          onSubmit={() => {
+            localStorage.setItem(`reviewed-${requestId}`, 'true');
+            setShowReview(false);
+          }}
+        />
+      )}
     </div>
   );
 }
