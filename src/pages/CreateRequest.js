@@ -89,9 +89,9 @@ function CreateRequest({ user }) {
           address: formData.store
         },
         deliveryLocation: {
-          latitude: formData.deliveryLocation.latitude || formData.deliveryLocation.coordinates?.lat,
-          longitude: formData.deliveryLocation.longitude || formData.deliveryLocation.coordinates?.lng,
-          address: formData.deliveryLocation.address
+          latitude: formData.deliveryLocation?.latitude || user.homeAddress?.latitude || 0,
+          longitude: formData.deliveryLocation?.longitude || user.homeAddress?.longitude || 0,
+          address: formData.deliveryLocation?.address || user.homeAddress?.address || 'Unknown'
         }
       };
 
