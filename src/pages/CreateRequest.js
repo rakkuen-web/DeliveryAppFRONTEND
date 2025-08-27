@@ -56,11 +56,11 @@ function CreateRequest({ user }) {
     setUseHomeAddress(!useHomeAddress);
     setFormData(prev => ({
       ...prev,
-      deliveryLocation: useHomeAddress ? null : {
+      deliveryLocation: useHomeAddress ? {
         latitude: user.homeAddress.latitude,
         longitude: user.homeAddress.longitude,
         address: user.homeAddress.address
-      }
+      } : null
     }));
   };
 
@@ -276,9 +276,9 @@ function CreateRequest({ user }) {
               </button>
             )}
             
-            {useHomeAddress && formData.deliveryLocation && (
+            {useHomeAddress && user?.homeAddress && (
               <div style={{ padding: '8px', background: '#f0f8f0', borderRadius: '4px' }}>
-                🏠 {formData.deliveryLocation.address}
+                🏠 {user.homeAddress.address}
               </div>
             )}
           </div>
