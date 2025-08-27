@@ -29,7 +29,15 @@ function CustomerDashboard({ user }) {
     // Request live driver locations via socket only
     socket.emit('get-driver-locations', { customerId: user._id });
     
-    return () => socket.disconnect();
+    // Refresh every 60 seconds only
+    const interval = setInterval(() => {
+      socket.emit('get-driver-locations', { customerId: user._id });
+    }, 60000);
+    
+    return () => {
+      socket.disconnect();
+      clearInterval(interval);
+    };
   }, []);
   
   useEffect(() => {
