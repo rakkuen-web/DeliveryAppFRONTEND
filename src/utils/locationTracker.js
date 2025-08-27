@@ -23,15 +23,19 @@ export class LocationTracker {
             console.log('📍 GPS UPDATE:', pos.coords.latitude, pos.coords.longitude);
             this.updateLocation(pos.coords.latitude, pos.coords.longitude);
           },
-          (error) => console.log('Watch error:', error),
-          { enableHighAccuracy: true, timeout: 30000, maximumAge: 10000 }
+          (error) => {
+            console.log('Watch error:', error);
+            // Continue with last known location
+          },
+          { enableHighAccuracy: false, timeout: 15000, maximumAge: 30000 }
         );
       },
       (error) => {
         console.log('❌ GPS FAILED:', error.code, error.message);
-        alert(`GPS Error: ${error.message}. Code: ${error.code}`);
+        // Use fallback location (Casablanca)
+        this.updateLocation(33.5731, -7.5898);
       },
-      { enableHighAccuracy: true, timeout: 30000, maximumAge: 0 }
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
     );
   }
 
@@ -75,7 +79,7 @@ export class LocationTracker {
           console.log('❌ getCurrentLocation failed:', error.message);
           resolve({ latitude: 33.5731, longitude: -7.5898 });
         },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        { enableHighAccuracy: false, timeout: 5000, maximumAge: 60000 }
       );
     });
   }

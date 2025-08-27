@@ -135,8 +135,10 @@ const LiveTrackingMap = ({ request, user }) => {
     const newMarkers = {};
     
     // User location marker (delivery address)
-    const userLat = request.deliveryLocation.latitude;
-    const userLng = request.deliveryLocation.longitude;
+    const userLat = request.deliveryLocation.latitude || 33.5731;
+    const userLng = request.deliveryLocation.longitude || -7.5898;
+    
+    console.log('User location:', userLat, userLng);
     
     newMarkers.user = window.L.marker(
       [userLat, userLng],
@@ -152,6 +154,8 @@ const LiveTrackingMap = ({ request, user }) => {
     
     // Driver location marker (if available)
     if (driverLocation) {
+      console.log('Driver location:', driverLocation.latitude, driverLocation.longitude);
+      
       newMarkers.driver = window.L.marker(
         [driverLocation.latitude, driverLocation.longitude],
         {
