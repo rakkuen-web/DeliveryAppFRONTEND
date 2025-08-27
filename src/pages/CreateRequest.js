@@ -92,6 +92,11 @@ function CreateRequest({ user }) {
           latitude: formData.deliveryLocation?.latitude || user.homeAddress?.latitude || 0,
           longitude: formData.deliveryLocation?.longitude || user.homeAddress?.longitude || 0,
           address: formData.deliveryLocation?.address || user.homeAddress?.address || 'Unknown'
+        },
+        customerAddress: {
+          latitude: user.homeAddress?.latitude,
+          longitude: user.homeAddress?.longitude,
+          address: user.homeAddress?.address
         }
       };
 

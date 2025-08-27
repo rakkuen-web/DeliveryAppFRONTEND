@@ -136,9 +136,9 @@ const LiveTrackingMap = ({ request, user }) => {
     
     const newMarkers = {};
     
-    // User location marker (delivery address)
-    const userLat = request.deliveryLocation.latitude;
-    const userLng = request.deliveryLocation.longitude;
+    // User location marker (use customerAddress as backup)
+    const userLat = request.deliveryLocation.latitude || request.customerAddress?.latitude;
+    const userLng = request.deliveryLocation.longitude || request.customerAddress?.longitude;
     
     console.log('User location:', userLat, userLng);
     
